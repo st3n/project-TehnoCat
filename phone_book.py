@@ -188,7 +188,6 @@ class AddressBook(UserDict):
     def dump(self):
         with open("address_book.bin", "wb") as file:
             pickle.dump(self.data, file)
-        print("Saved to disk")
 
     def load(self):
         FILENAME = "address_book.bin"
