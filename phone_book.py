@@ -169,6 +169,12 @@ def show_birthdays_next_week(_, contacts):
 
 class AddressBook(UserDict):
     def __init__(self):
+        """
+        Initialize an AddressBook instance.
+
+        This constructor initializes an empty dictionary in the `data` attribute and
+        loads data from a file into it if the file exists.
+        """
         super().__init__()
         self.data = {}
         self.load()
@@ -186,10 +192,20 @@ class AddressBook(UserDict):
             raise RecordDoesNotExistError
 
     def dump(self):
+        """
+        Serialize and save the data dictionary to a binary file using the Pickle format.
+        The data is saved to the file "address_book.bin" in binary mode.
+        :return: None
+        """
         with open("address_book.bin", "wb") as file:
             pickle.dump(self.data, file)
 
     def load(self):
+        """
+        Deserialize and load data from a binary file using the Pickle format.
+        If the file "address_book.bin" exists, it loads the data from it into the AddressBook instance.
+        :return:
+        """
         FILENAME = "address_book.bin"
         if os.path.exists(FILENAME):
             with open(FILENAME, "rb") as file:
