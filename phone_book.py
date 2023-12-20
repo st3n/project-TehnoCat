@@ -20,6 +20,8 @@ def add_contact(args, contacts):
         record.add_phone(phone)
         contacts.add_record(record)
 
+    contacts.dump()
+
     return f"Phone number {phone} for contact {name} added."
 
 
@@ -54,6 +56,7 @@ def change_contact(args, contacts):
 
     if name in contacts:
         contacts[name].edit_phone(old_phone, new_phone)
+        contacts.dump()
         return f"{old_phone} changed to {new_phone} for contact {name}"
     else:
         raise RecordDoesNotExistError(name)
@@ -92,6 +95,8 @@ def add_birthday(args, contacts):
         raise RecordDoesNotExistError
 
     contact.add_birthday(date)
+    contacts.dump()
+
     return "Birthday added."
 
 
