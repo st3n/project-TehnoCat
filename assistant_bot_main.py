@@ -1,4 +1,7 @@
 from phone_book import *
+from command import bot_commands, find_closest_command
+import pickle
+import os
 
 
 def parse_input(user_input):
@@ -9,18 +12,10 @@ def parse_input(user_input):
 
 def show_help():
     print("possible commands:")
-    print("'hello' - greetings message")
-    print("'add [name] [phone]' - add new contact in the phone book")
-    print("'change [name] [phone]' - change the saved contact phone")
-    print("'phone [name]' - show the phone of the user with entered name")
-    print(
-        "'add-birthday [name] [date]' - add birthday for name 'name' in format 'DD.MM.YYYY'"
-    )
-    print("'show-birthday[name]' - show birthday for name 'name'")
-    print("'birthdays' - show all birthdays from the phone book on the next week")
-    print("'all' - print the contacnts phone book")
-    print("'close' or 'exit' - quit from the program")
-    print("'help' - print help message")
+    for command_data in bot_commands():
+        name = f"{command_data['name']}"
+        args = f" [{', '.join(command_data['args'])}]" if command_data['args'] else ''
+        print(f"'{name}{args}' - {command_data['desc']}")
 
 
 def main():
@@ -53,6 +48,7 @@ def main():
             show_help()
         else:
             print("Invalid command.")
+            print(f"Did you mean '{find_closest_command(command)}'?\n")
             show_help()
 
 
