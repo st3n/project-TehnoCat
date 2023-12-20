@@ -1,4 +1,7 @@
 from collections import UserDict
+import os
+import pickle
+
 from utils.validator import is_valid_phone
 from utils.cli_parse_decorator import *
 from phone_book import *
@@ -171,3 +174,14 @@ class AddressBook(UserDict):
             del self.data[name]
         else:
             raise RecordDoesNotExistError
+
+    def dump(self):
+        with open("address_book.bin", "wb") as file:
+            pickle.dump(self.data, file)
+        print("Saved to disk")
+
+    def load(self):
+        FILENAME = "address_book.bin"
+        if os.path.exists(FILENAME):
+            with open(FILENAME, "rb") as file:
+                self.data = pickle.load(file)
