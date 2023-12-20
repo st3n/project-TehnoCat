@@ -46,6 +46,8 @@ def main():
             print(show_birthdays_next_week(contacts))
         elif command == "birthdays-in-days":
             print(show_birthdays_in_days(args, contacts))
+        elif command.startswith("search-by"):
+            print("\n".join(map(lambda search_result: str(search_result), search(args, command, contacts))))
         elif command == "help":
             show_help()
         else:
