@@ -1,4 +1,4 @@
-from contact_data import *
+from project_TehnoCat.contact_data import *
 
 
 class Record:
