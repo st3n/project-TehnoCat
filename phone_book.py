@@ -3,6 +3,7 @@ from utils.validator import is_valid_phone
 from utils.cli_parse_decorator import *
 from phone_book import *
 from next_week_birthdays import get_birthdays_per_week
+from next_week_birthdays import get_birthdays_per_week, get_birthdays_in_days
 from record import Record
 
 
@@ -95,6 +96,14 @@ def show_birthdays_next_week(contacts):
         )
     )
 
+def show_birthdays_in_days(args, contacts):
+    days_from_now = args[0]
+    return get_birthdays_in_days(
+        map(
+            lambda x: {"name": x, "birthday": contacts.find(x).birthday.value}, contacts
+        ),
+        int(days_from_now)
+    )
 
 class AddressBook(UserDict):
     def add_record(self, record):

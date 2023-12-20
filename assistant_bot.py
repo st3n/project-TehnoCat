@@ -44,6 +44,8 @@ def main():
             print(show_birthday(args, contacts))
         elif command == "birthdays":
             print(show_birthdays_next_week(contacts))
+        elif command == "birthdays-in-days":
+            print(show_birthdays_in_days(args, contacts))
         elif command == "help":
             show_help()
         else:
