@@ -1,4 +1,4 @@
-from phone_book import *
+from project_TehnoCat.phone_book import *
 
 
 def parse_input(user_input):
