@@ -163,6 +163,11 @@ def show_birthdays_next_week(_, contacts):
 
 
 class AddressBook(UserDict):
+    def __init__(self):
+        super().__init__()
+        self.data = {}
+        self.load()
+
     def add_record(self, record):
         self.data[record.name.value] = record
 
