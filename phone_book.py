@@ -96,12 +96,25 @@ def show_birthdays_next_week(contacts):
     )
 
 
+def search(args, command, contacts):
+    value = args[0]
+    criteria = command.split('-')[-1]
+    return contacts.search_by(criteria, value)
+
+
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
 
     def find(self, name):
         return self.data.get(name, None)
+    
+    def search_by(self, criteria, value):
+        records = list(self.data.values())
+        def is_field_eq(record):
+            return getattr(record, criteria).is_eq(value)
+        
+        return list(filter(lambda record: is_field_eq(record), records))
 
     def delete(self, name):
         if name in self.data:

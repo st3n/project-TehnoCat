@@ -9,7 +9,14 @@ class Field:
 
     def __str__(self):
         return str(self.value)
-
+    
+    def is_eq(self, another_value):
+        splitted_another_value = another_value.split(', ')
+        arr_value = self.value
+        if self.value is not list:
+            arr_value = [self.value]
+        
+        return bool(set(arr_value).intersection(splitted_another_value))
 
 class Name(Field):
     def __init__(self, value):

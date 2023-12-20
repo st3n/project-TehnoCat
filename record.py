@@ -7,7 +7,14 @@ class Record:
         self.phones = []
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {', '.join(p.value for p in self.phones)}"
+        res = f"Contact name: {self.name.value}\n"
+        res += f"Phones: {', '.join(p.value for p in self.phones)}\n"
+        if self.email:
+            res += f"Email: {self.email}\n"
+        if self.birthday:
+            res += f"Birthday: {self.birthday}\n"
+        
+        return res
 
     def add_phone(self, phone):
         if Phone.is_valid_phone(phone):
