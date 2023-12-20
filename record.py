@@ -7,6 +7,7 @@ class Record:
         self.phones = []
         self.emails = []
         self.address = []
+        self.birthday = None
 
     def __str__(self):
         return (
