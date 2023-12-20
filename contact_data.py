@@ -36,3 +36,14 @@ class Phone(Field):
     @staticmethod
     def is_valid_phone(phone):
         return is_valid_phone(phone)
+
+
+class Email(Field):
+    def __init__(self, email):
+        if not self.is_valid_email(email):
+            raise EmailValueError
+        super().__init__(email)
+
+    @staticmethod
+    def is_valid_email(email):
+        return is_valid_email(email)
