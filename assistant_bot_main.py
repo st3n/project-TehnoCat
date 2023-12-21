@@ -51,7 +51,7 @@ def main():
     contacts = AddressBook()
     print("Welcome to the assistant bot!")
     while True:
-        user_input = input("Enter a command: ").strip().lower()
+        user_input = input("Enter a command: ").strip()
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:

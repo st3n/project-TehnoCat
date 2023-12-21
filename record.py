@@ -7,6 +7,7 @@ class Record:
         self.phones = []
         self.emails = []
         self.address = []
+        self.birthday = None
 
     def __str__(self):
         return (
@@ -26,7 +27,7 @@ class Record:
         self.phones.remove(Phone(phone))
 
     def edit_phone(self, old_phone, new_phone):
-        if Phone.is_valid_phone(new_phone):
+        if Phone.is_valid(new_phone):
             phone = self.find_phone(old_phone)
             if phone:
                 phone.value = new_phone
