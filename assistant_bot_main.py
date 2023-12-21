@@ -1,5 +1,6 @@
 from phone_book import *
-from command import bot_commands, find_closest_command
+from command import bot_commands, find_closest_command, CommandCompleter
+from prompt_toolkit import PromptSession
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -17,9 +18,10 @@ def show_help():
 
 def main():
     contacts = AddressBook()
+    session = PromptSession(completer=CommandCompleter())
     print("Welcome to the assistant bot!")
     while True:
-        user_input = input("Enter a command: ").strip().lower()
+        user_input = session.prompt('Enter a command: ').strip().lower()
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:

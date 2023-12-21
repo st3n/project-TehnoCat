@@ -1,4 +1,5 @@
 import jaro
+from prompt_toolkit.completion import Completer, Completion
 
 def bot_commands():
   return [
@@ -88,3 +89,20 @@ def find_closest_command(command_name):
   names = list(map(lambda bot_command: bot_command['name'], bot_commands()))
   distances = list(map(lambda name: {'name': name, 'dist': jaro.jaro_winkler_metric(name, command_name)}, names))
   return sorted(distances, key=lambda x: x['dist'])[-1]['name']
+
+class CommandCompleter(Completer):
+    commands = list(map(lambda bot_command: bot_command['name'], bot_commands()))
+
+    def get_completions(self, document, complete_event):
+        # Get the entire text up to the cursor position
+        text_before_cursor = document.text_before_cursor
+
+        # Check if there's a space after the first word
+        if ' ' in text_before_cursor:
+            return  # Do not offer completions if there's a space after the first word
+
+        # If we're still at the first word, continue with completion
+        word = document.get_word_before_cursor()
+        for cmd in self.commands:
+            if cmd.startswith(word):
+                yield Completion(cmd, start_position=-len(word))
