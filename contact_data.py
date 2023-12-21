@@ -10,7 +10,12 @@ class Field:
     def __str__(self):
         return str(self.value)
     
-    def is_eq(self, another_value):
+    # Checks if the value includes another value
+    # Compitable with arrays and literal constants 
+    #
+    # @params [List, Number, String, Bool] another_value
+    # @return [Bool]
+    def value_includes(self, another_value):
         splitted_another_value = another_value.split(', ')
         arr_value = self.value
         if self.value is not list:

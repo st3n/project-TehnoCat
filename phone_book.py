@@ -112,7 +112,7 @@ class AddressBook(UserDict):
     def search_by(self, criteria, value):
         records = list(self.data.values())
         def is_field_eq(record):
-            return getattr(record, criteria).is_eq(value)
+            return getattr(record, criteria).value_includes(value)
         
         return list(filter(lambda record: is_field_eq(record), records))
 
