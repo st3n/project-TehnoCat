@@ -4,6 +4,7 @@ from utils.cli_parse_decorator import *
 from phone_book import *
 from next_week_birthdays import get_birthdays_per_week
 from record import Record
+from consol import *
 
 
 @input_error
@@ -53,15 +54,15 @@ def show_phone(args, contacts):
 
 
 @input_error
-def show_all(args, contacts):
+def show_all(args, contacts, console):
     if args:
         raise ValueError
 
     if not contacts:
         raise KeyError
 
-    prefix = "The phone book:\n"
-    return prefix + "\n".join(map(lambda x: contacts.find(x).__str__(), contacts))
+    else:
+        return display_table_all(contacts, console)
 
 
 @input_error

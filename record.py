@@ -1,10 +1,11 @@
 from contact_data import *
 
-
+   
 class Record:
-    def __init__(self, name):
+    def __init__(self, name, birthday=None):
         self.name = Name(name)
         self.phones = []
+        self.birthday = Birthday(birthday) if birthday else None
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {', '.join(p.value for p in self.phones)}"

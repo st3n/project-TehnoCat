@@ -1,5 +1,9 @@
 from phone_book import *
+from rich.console import Console
+from rich import print
+from rich.table import Table
 
+console = Console()
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -7,31 +11,39 @@ def parse_input(user_input):
     return cmd, *args
 
 
-def show_help():
-    print("possible commands:")
-    print("'hello' - greetings message")
-    print("'add [name] [phone]' - add new contact in the phone book")
-    print("'change [name] [phone]' - change the saved contact phone")
-    print("'phone [name]' - show the phone of the user with entered name")
-    print(
-        "'add-birthday [name] [date]' - add birthday for name 'name' in format 'DD.MM.YYYY'"
-    )
-    print("'show-birthday[name]' - show birthday for name 'name'")
-    print("'birthdays' - show all birthdays from the phone book on the next week")
-    print("'all' - print the contacnts phone book")
-    print("'close' or 'exit' - quit from the program")
-    print("'help' - print help message")
 
+def show_help():
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Command", style="cyan", width=20)
+    table.add_column("Description", style="yellow", width=60)
+
+    commands = [
+        ("hello", "Greetings message"),
+        ("add", "Add new contact in the phone book. After the command, write your name and phone number"),
+        ("change", "Change the saved contact phone. After the command, write your name and phone number"),
+        ("phone", "Show the phone of the user with entered name. After the command, write your name"),
+        ("add-birthday", "Add birthday for name 'name'. After the command, write your name and birthday in format 'DD.MM.YYYY'"),
+        ("show-birthday", "Show birthday for name 'name'. After the command, write your name"),
+        ("birthdays", "Show all birthdays from the phone book on the next week"),
+        ("all", "Print the contacts phone book"),
+        ("close or exit", "Quit from the program"),
+        ("help", "Print help message")
+    ]
+
+    for command, description in commands:
+        table.add_row(command, description)
+
+    console.print(table)
 
 def main():
     contacts = AddressBook()
-    print("Welcome to the assistant bot!")
+    print("[bold blue]Welcome to the assistant bot![/bold blue]")  
     while True:
         user_input = input("Enter a command: ").strip().lower()
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
-            print("Good bye!")
+            print("[bold magenta]Goodbye![/bold magenta]")  
             break
         elif command == "hello":
             print("How can I help you?")
@@ -42,7 +54,7 @@ def main():
         elif command == "phone":
             print(show_phone(args, contacts))
         elif command == "all":
-            print(show_all(args, contacts))
+            show_all(args, contacts, console)
         elif command == "add-birthday":
             print(add_birthday(args, contacts))
         elif command == "show-birthday":
@@ -52,9 +64,7 @@ def main():
         elif command == "help":
             show_help()
         else:
-            print("Invalid command.")
-            show_help()
-
+            print("[bold yellow]Invalid command.[/bold yellow]")
 
 if __name__ == "__main__":
     main()

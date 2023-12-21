@@ -27,7 +27,7 @@ def input_error(func):
                 "add_contact": f"{error_msg} Use 'add [name] [phone number]'.",
                 "change_contact": f"{error_msg} Use 'change [name] [new phone number]'.",
                 "show_phone": f"{error_msg} Use 'phone [name]'.",
-                "show_all": f"{error_msg} Use 'all' without arguments.",
+             #   "show_all": f"{error_msg} Use 'all' without arguments.",
                 "parse_input": f"{error_msg} Use 'help' for commands list",
                 "add_birthday": f"{error_msg} Use 'add-birthday [name] [birtday]' birtday in format DD.MM.YYYY.",
                 "show_birthday": f"{error_msg} Use 'show-birthday [name]'.",
