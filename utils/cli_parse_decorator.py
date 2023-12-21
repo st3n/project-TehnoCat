@@ -16,10 +16,6 @@ class RecordDoesNotExistError(Exception):
 class PhoneValueError(Exception):
     message = f"{error_msg} Phone number is not correct. Expected format is 10 digits."
 
-class EmailValueError(Exception):
-    message = f"{error_msg} Email is not correct. Expected format is example@example.com."
-
-
 class PhoneValueNotExist(Exception):
     def __init__(self, name, phone):
         self.name = name
