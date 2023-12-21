@@ -12,15 +12,39 @@ def show_help():
     print("'hello' - greetings message")
     print("'add [name] [phone]' - add new contact in the phone book")
     print("'change [name] [phone]' - change the saved contact phone")
+    print("remove [name]' - remove contact")
+    print("remove [name] [phone]' - remove contact phone")
+    print("remove [name] [email]' - remove contact email")
+    print("remove [name] [address]' - remove contact address")
     print("'phone [name]' - show the phone of the user with entered name")
     print(
-        "'add-birthday [name] [date]' - add birthday for name 'name' in format 'DD.MM.YYYY'"
+        "'add-birthday [name] [date]' - add birthday for contact in format 'DD.MM.YYYY'"
     )
-    print("'show-birthday[name]' - show birthday for name 'name'")
+    print("add-email [name] [email] - add email for contact")
+    print("add-address [name] [address] - add address for contact")
+    print("show-email [name]")
+    print("show-address [name]")
+    print("show-birthday [name]")
     print("'birthdays' - show all birthdays from the phone book on the next week")
     print("'all' - print the contacnts phone book")
     print("'close' or 'exit' - quit from the program")
     print("'help' - print help message")
+
+
+command_dict = {
+    "add": add_contact,
+    "change": change_contact,
+    "remove": remove_contact,
+    "phone": show_phone,
+    "all": show_all,
+    "add-birthday": add_birthday,
+    "add-email": add_email,
+    "add-address": add_address,
+    "show-email": show_email,
+    "show-address": show_address,
+    "show-birthday": show_birthday,
+    "birthdays": show_birthdays_next_week,
+}
 
 
 def main():
@@ -35,20 +59,8 @@ def main():
             break
         elif command == "hello":
             print("How can I help you?")
-        elif command == "add":
-            print(add_contact(args, contacts))
-        elif command == "change":
-            print(change_contact(args, contacts))
-        elif command == "phone":
-            print(show_phone(args, contacts))
-        elif command == "all":
-            print(show_all(args, contacts))
-        elif command == "add-birthday":
-            print(add_birthday(args, contacts))
-        elif command == "show-birthday":
-            print(show_birthday(args, contacts))
-        elif command == "birthdays":
-            print(show_birthdays_next_week(contacts))
+        elif command in command_dict:
+            print(command_dict[command](args, contacts))
         elif command == "help":
             show_help()
         else:

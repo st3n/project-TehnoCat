@@ -1,6 +1,6 @@
 import datetime
 from utils.cli_parse_decorator import *
-from utils.validator import is_valid_phone
+from utils.validator import is_valid_phone, is_valid_email
 
 
 class Field:
@@ -9,6 +9,14 @@ class Field:
 
     def __str__(self):
         return str(self.value)
+
+    def __eq__(self, other):
+        if isinstance(other, Field):
+            return self.value == other.value
+        return False
+
+    def __hash__(self):
+        return hash(self.value)
 
 
 class Name(Field):
@@ -29,21 +37,26 @@ class Birthday(Field):
 
 class Phone(Field):
     def __init__(self, phone):
-        if not self.is_valid_phone(phone):
-            raise ValueError("Error: The phone number must be 10 digits")
+        if not self.is_valid(phone):
+            raise PhoneValueError
         super().__init__(phone)
 
     @staticmethod
-    def is_valid_phone(phone):
+    def is_valid(phone):
         return is_valid_phone(phone)
+
+
+class Address(Field):
+    def __init__(self, address):
+        super().__init__(address)
 
 
 class Email(Field):
     def __init__(self, email):
-        if not self.is_valid_email(email):
-            raise EmailValueError
+        if not self.is_valid(email):
+            raise EmailValueError(email)
         super().__init__(email)
 
     @staticmethod
-    def is_valid_email(email):
+    def is_valid(email):
         return is_valid_email(email)
