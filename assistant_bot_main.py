@@ -1,8 +1,5 @@
 from phone_book import *
 from command import bot_commands, find_closest_command
-import pickle
-import os
-
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
