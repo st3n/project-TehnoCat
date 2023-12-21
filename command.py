@@ -44,22 +44,22 @@ def bot_commands():
     },
     {
         'name': 'search-by-name',
-        'args': [],
+        'args': ['name'],
         'desc': 'shows all contacts with this name'
     },
     {
         'name': 'search-by-birthday',
-        'args': [],
+        'args': ['date'],
         'desc': 'shows all contacts with the specific birthday'
     },
     {
         'name': 'search-by-email',
-        'args': [],
+        'args': ['email'],
         'desc': 'shows all contacts with the specific email'
     },
     {
         'name': 'search-by-phones',
-        'args': [],
+        'args': ['phone1', 'phone2', 'phoneN'],
         'desc': 'shows all contacts with the specific phone number'
     },
     {
