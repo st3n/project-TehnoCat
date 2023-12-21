@@ -1,7 +1,7 @@
 import datetime
 
-from project_TehnoCat.utils.cli_parse_decorator import *
-from project_TehnoCat.utils.validator import is_valid_phone
+from src.utils.cli_parse_decorator import *
+from src.utils.validator import is_valid_phone
 
 
 class Field:

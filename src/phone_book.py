@@ -2,11 +2,11 @@ from collections import UserDict
 import os
 import pickle
 
-from project_TehnoCat.utils.validator import is_valid_phone
-from project_TehnoCat.utils.cli_parse_decorator import *
-from project_TehnoCat.phone_book import *
-from project_TehnoCat.next_week_birthdays import get_birthdays_per_week
-from project_TehnoCat.record import Record
+from src.utils.validator import is_valid_phone
+from src.utils.cli_parse_decorator import *
+from src.phone_book import *
+from src.next_week_birthdays import get_birthdays_per_week
+from src.record import Record
 
 
 @dump_contacts
