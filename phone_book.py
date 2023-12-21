@@ -200,7 +200,7 @@ class AddressBook(UserDict):
         The data is saved to the file "address_book.bin" in binary mode.
         :return: None
         """
-        with open("address_book.bin", "wb") as file:
+        with open("./data/address_book.bin", "wb") as file:
             pickle.dump(self.data, file)
 
     def load(self):
@@ -209,7 +209,7 @@ class AddressBook(UserDict):
         If the file "address_book.bin" exists, it loads the data from it into the AddressBook instance.
         :return:
         """
-        FILENAME = "address_book.bin"
+        FILENAME = "./data/address_book.bin"
         if os.path.exists(FILENAME):
             with open(FILENAME, "rb") as file:
                 self.data = pickle.load(file)
