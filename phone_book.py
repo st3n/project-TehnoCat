@@ -10,9 +10,6 @@ from record import Record
 def add_contact(args, contacts):
     name, phone = args
 
-    if not is_valid_phone(phone):
-        raise PhoneValueError
-
     if name in contacts:
         contacts[name].add_phone(phone)
     else:
@@ -24,19 +21,39 @@ def add_contact(args, contacts):
 
 
 @input_error
-def change_contact(args, contacts):
-    name, new_phone = args
+def remove_contact(args, contacts):
+    if len(args) < 1:
+        raise ValueError
 
-    if not is_valid_phone(new_phone):
-        raise PhoneValueError
+    name = args[0]
+
+    if len(args) == 1:
+        contacts.delete(name)
+        return f"Contact {name} removed."
+
+    if len(args) == 2:
+        if "@" in args[1]:
+            contacts[name].remove_email(args[1])
+            return f"{name}'s email '{args[1]}' removed."
+
+        if args[1].isdigit():
+            contacts[name].remove_phone(args[1])
+            return f"{name}'s phone '{args[1]}' removed."
+    else:
+        full_address = " ".join(args[1:])
+        contacts[name].remove_address(full_address)
+        return f"{name}'s address '{full_address}' removed."
+
+
+@input_error
+def change_contact(args, contacts):
+    name, old_phone, new_phone = args
 
     if name in contacts:
-        record = contacts[name]
-        # here could be more suitable logic
-        record.phones[0].value = new_phone
-        return f"Contact {name} new phone number is {new_phone}."
+        contacts[name].edit_phone(old_phone, new_phone)
+        return f"{old_phone} changed to {new_phone} for contact {name}"
     else:
-        raise RecordDoesNotExistError
+        raise RecordDoesNotExistError(name)
 
 
 @input_error
@@ -76,6 +93,27 @@ def add_birthday(args, contacts):
 
 
 @input_error
+def add_email(args, contacts):
+    name, email = args
+    contact = contacts.find(name)
+    if not contact:
+        raise RecordDoesNotExistError
+
+    contact.add_email(email)
+    return "Email added."
+
+
+@input_error
+def add_address(args, contacts):
+    contact = contacts.find(args[0])
+    if not contact:
+        raise RecordDoesNotExistError
+
+    contact.add_address(" ".join(args[1:]))
+    return "Address added."
+
+
+@input_error
 def show_birthday(args, contacts):
     if len(args) == 0:
         raise ValueError
@@ -88,7 +126,32 @@ def show_birthday(args, contacts):
     return contact.birthday
 
 
-def show_birthdays_next_week(contacts):
+@input_error
+def show_email(args, contacts):
+    if len(args) == 0:
+        raise ValueError
+    name = args[0]
+    contact = contacts.find(name)
+    if not contact:
+        raise RecordDoesNotExistError
+
+    return contact.emails[0]
+
+
+@input_error
+def show_address(args, contacts):
+    if len(args) == 0:
+        raise ValueError
+    name = args[0]
+    contact = contacts.find(name)
+    if not contact:
+        raise RecordDoesNotExistError
+
+    return contact.address[0]
+
+
+@input_error
+def show_birthdays_next_week(_, contacts):
     return get_birthdays_per_week(
         map(
             lambda x: {"name": x, "birthday": contacts.find(x).birthday.value}, contacts
@@ -114,3 +177,5 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
+        else:
+            raise RecordDoesNotExistError
