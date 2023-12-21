@@ -12,6 +12,10 @@ def show_help():
     print("'hello' - greetings message")
     print("'add [name] [phone]' - add new contact in the phone book")
     print("'change [name] [phone]' - change the saved contact phone")
+    print("remove [name]' - remove contact")
+    print("remove [name] [phone]' - remove contact phone")
+    print("remove [name] [email]' - remove contact email")
+    print("remove [name] [address]' - remove contact address")
     print("'phone [name]' - show the phone of the user with entered name")
     print(
         "'add-birthday [name] [date]' - add birthday for contact in format 'DD.MM.YYYY'"
@@ -30,6 +34,7 @@ def show_help():
 command_dict = {
     "add": add_contact,
     "change": change_contact,
+    "remove": remove_contact,
     "phone": show_phone,
     "all": show_all,
     "add-birthday": add_birthday,

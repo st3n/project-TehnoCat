@@ -12,7 +12,7 @@ class Record:
         return (
             f"Contact name: {self.name.value}\n"
             f"phones: {', '.join(p.value for p in self.phones)}\n"
-            f"emails: {', '.join(e.value for e in self.emails)}\n "
+            f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
         )
 
@@ -23,7 +23,7 @@ class Record:
             raise PhoneValueError
 
     def remove_phone(self, phone):
-        self.phones.remove(phone)
+        self.phones.remove(Phone(phone))
 
     def edit_phone(self, old_phone, new_phone):
         if Phone.is_valid_phone(new_phone):
@@ -47,5 +47,11 @@ class Record:
         else:
             raise EmailValueError(email)
 
+    def remove_email(self, email):
+        self.emails.remove(Email(email))
+
     def add_address(self, address):
         self.address.append(Address(address))
+
+    def remove_address(self, address):
+        self.address.remove(Address(address))

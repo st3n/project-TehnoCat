@@ -40,11 +40,13 @@ def input_error(func):
             return {
                 "add_contact": f"{error_msg} Use 'add [name] [phone number]'.",
                 "change_contact": f"{error_msg} Use 'change [name] [old phone number] [new phone number]'.",
+                "remove_contact": f"{error_msg} Use 'remove [name]'.",
                 "show_phone": f"{error_msg} Use 'phone [name]'.",
                 "show_all": f"{error_msg} Use 'all' without arguments.",
                 "parse_input": f"{error_msg} Use 'help' for commands list",
                 "add_birthday": f"{error_msg} Use 'add-birthday [name] [birtday]' birtday in format DD.MM.YYYY.",
-                "show_birthday": f"{error_msg} Use 'show-birthday [name]'.",
+                "add_email": f"{error_msg} Use 'add-eamil [name] [email]'.",
+                "add_address": f"{error_msg} Use 'add-address [name] [address]'.",
                 "show_email": f"{error_msg} Use 'show-email [name]'.",
                 "show_address": f"{error_msg} Use 'show-address [name]'.",
             }[func.__name__]
