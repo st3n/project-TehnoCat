@@ -21,6 +21,31 @@ def add_contact(args, contacts):
 
 
 @input_error
+def remove_contact(args, contacts):
+    if len(args) < 1:
+        raise ValueError
+
+    name = args[0]
+
+    if len(args) == 1:
+        contacts.delete(name)
+        return f"Contact {name} removed."
+
+    if len(args) == 2:
+        if "@" in args[1]:
+            contacts[name].remove_email(args[1])
+            return f"{name}'s email '{args[1]}' removed."
+
+        if args[1].isdigit():
+            contacts[name].remove_phone(args[1])
+            return f"{name}'s phone '{args[1]}' removed."
+    else:
+        full_address = " ".join(args[1:])
+        contacts[name].remove_address(full_address)
+        return f"{name}'s address '{full_address}' removed."
+
+
+@input_error
 def change_contact(args, contacts):
     name, old_phone, new_phone = args
 
@@ -80,12 +105,11 @@ def add_email(args, contacts):
 
 @input_error
 def add_address(args, contacts):
-    name, address = args
-    contact = contacts.find(name)
+    contact = contacts.find(args[0])
     if not contact:
         raise RecordDoesNotExistError
 
-    contact.add_address(address)
+    contact.add_address(" ".join(args[1:]))
     return "Address added."
 
 
@@ -145,3 +169,5 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
+        else:
+            raise RecordDoesNotExistError
