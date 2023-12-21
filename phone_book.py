@@ -2,6 +2,7 @@ from collections import UserDict
 import os
 import pickle
 
+from utils.dump_decorator import dump_contacts
 from utils.validator import is_valid_phone
 from utils.cli_parse_decorator import *
 from phone_book import *
@@ -9,6 +10,7 @@ from next_week_birthdays import get_birthdays_per_week
 from record import Record
 
 
+@dump_contacts
 @input_error
 def add_contact(args, contacts):
     name, phone = args
@@ -20,11 +22,10 @@ def add_contact(args, contacts):
         record.add_phone(phone)
         contacts.add_record(record)
 
-    contacts.dump()
-
     return f"Phone number {phone} for contact {name} added."
 
 
+@dump_contacts
 @input_error
 def remove_contact(args, contacts):
     if len(args) < 1:
@@ -50,13 +51,13 @@ def remove_contact(args, contacts):
         return f"{name}'s address '{full_address}' removed."
 
 
+@dump_contacts
 @input_error
 def change_contact(args, contacts):
     name, old_phone, new_phone = args
 
     if name in contacts:
         contacts[name].edit_phone(old_phone, new_phone)
-        contacts.dump()
         return f"{old_phone} changed to {new_phone} for contact {name}"
     else:
         raise RecordDoesNotExistError(name)
@@ -87,6 +88,7 @@ def show_all(args, contacts):
     return prefix + "\n".join(map(lambda x: contacts.find(x).__str__(), contacts))
 
 
+@dump_contacts
 @input_error
 def add_birthday(args, contacts):
     name, date = args
@@ -95,11 +97,11 @@ def add_birthday(args, contacts):
         raise RecordDoesNotExistError
 
     contact.add_birthday(date)
-    contacts.dump()
 
     return "Birthday added."
 
 
+@dump_contacts
 @input_error
 def add_email(args, contacts):
     name, email = args
@@ -111,6 +113,7 @@ def add_email(args, contacts):
     return "Email added."
 
 
+@dump_contacts
 @input_error
 def add_address(args, contacts):
     contact = contacts.find(args[0])
