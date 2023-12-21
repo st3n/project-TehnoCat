@@ -1,0 +1,4 @@
+certifi==2023.7.22
+jaro-winkler==2.0.3
+prompt-toolkit==3.0.43
+wcwidth==0.2.12
