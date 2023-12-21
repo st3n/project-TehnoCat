@@ -3,7 +3,6 @@ from utils.validator import is_valid_phone
 from utils.cli_parse_decorator import *
 from phone_book import *
 from next_week_birthdays import get_birthdays_per_week
-from next_week_birthdays import get_birthdays_per_week, get_birthdays_in_days
 from record import Record
 
 

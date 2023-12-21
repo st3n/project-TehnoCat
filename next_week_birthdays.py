@@ -3,24 +3,44 @@ from collections import defaultdict
 
 
 def get_birthdays_per_week(users):
-    birthdays = defaultdict(list)
+    # 1. data preparation
+    birthdays_per_day = defaultdict(list)
+
+    # 2. obtaining the current date
     today = datetime.today().date()
-    next_saturday = today + timedelta(days=-today.weekday() + 5)
-    next_friday = next_saturday + timedelta(days=6)
 
+    # 3. users sorting
     for user in users:
-      birthday = user["birthday"].date().replace(year=today.year)
-      # Since we move weekend birthdays to Monday let's start our "week" from saturday
-      if next_saturday <= birthday <= next_friday:
-        birthday_day_of_week = birthday.strftime("%A")
-        birthday_str = birthday.strftime("%d.%m.%Y")
-        if birthday.weekday() > 4: # Saturday & Sunday check
-          birthdays[f"Monday ({birthday_str})"].append(user["name"])
-        else:
-          birthdays[f"{birthday_day_of_week} ({birthday_str})"].append(user["name"])
+        # date conversion
+        name = user["name"]
+        birthday = user["birthday"].date()
+        # 4. evaluation of dates for this year
+        birthday_this_year = birthday.replace(year=today.year)
 
-    for day, names in birthdays.items():
-      print(f"{day}: {', '.join(names)}")
+        if birthday_this_year < today:
+            birthday_this_year = birthday_this_year.replace(year=today.year + 1)
+
+        delta_days = (birthday_this_year - today).days
+
+        # evaluation for the next week
+        if delta_days < 7:
+            today_day_of_week = today.strftime("%A")
+            birthday_day_of_week = (today + timedelta(days=delta_days)).strftime("%A")
+
+            # corner case: skip birthdays of collegues with delta == 6 on the next Monday if today is Sunday
+            # (NOTE: this is not mentioned in task description, recomandation)
+            if today_day_of_week == "Sunday" and birthday_day_of_week == "Saturday":
+                continue
+
+            # if it's a weekend, postpone to Monday
+            if birthday_day_of_week in ["Saturday", "Sunday"]:
+                birthday_day_of_week = "Monday"
+            birthdays_per_day[birthday_day_of_week].append(name)
+
+    return "\n".join(
+        [f"{day}: {', '.join(names)}" for day, names in birthdays_per_day.items()]
+    )
+
 
 
 def get_birthdays_in_days(users, days_from_now = 0):
@@ -30,7 +50,7 @@ def get_birthdays_in_days(users, days_from_now = 0):
 
     birthday_users = list(filter(lambda user: (user['birthday'].date().replace(year=date.year) == date), users))
     user_names = ', '.join(map(lambda user: user['name'], birthday_users))
-    print(f"{birthday_day_of_week} ({birthday_str}): {user_names}")
+    return f"{birthday_day_of_week} ({birthday_str}): {user_names}"
 
 
 # users = [
