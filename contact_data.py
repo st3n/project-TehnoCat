@@ -21,7 +21,7 @@ class Field:
         if self.value is not list:
             arr_value = [self.value]
         
-        return bool(set(arr_value).intersection(splitted_another_value))
+        return bool(set(arr_value).intersection(set(splitted_another_value)))
 
 class Name(Field):
     def __init__(self, value):
