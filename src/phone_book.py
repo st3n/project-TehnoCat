@@ -6,7 +6,7 @@ from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
 from src.utils.dump_decorator import dump_contacts
 from src.phone_book import *
-from src.birthdays import get_birthdays_per_week
+from src.birthdays import get_birthdays_per_week, get_birthdays_in_days
 from src.contact_record import Record
 
 
@@ -178,17 +178,19 @@ def show_address(args, contacts):
 
 @input_error
 def show_birthdays_next_week(_, contacts):
+    contacts_with_birthdays = list(filter(lambda name: contacts.find(name).birthday is not None, contacts))
     return get_birthdays_per_week(
         map(
-            lambda x: {"name": x, "birthday": contacts.find(x).birthday.value}, contacts
+            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value}, contacts_with_birthdays
         )
     )
 
 def show_birthdays_in_days(args, contacts):
     days_from_now = args[0]
+    contacts_with_birthdays = list(filter(lambda name: contacts.find(name).birthday is not None, contacts))
     return get_birthdays_in_days(
         map(
-            lambda x: {"name": x, "birthday": contacts.find(x).birthday.value}, contacts
+            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value}, contacts_with_birthdays
         ),
         int(days_from_now)
     )
