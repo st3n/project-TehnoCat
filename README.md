@@ -30,6 +30,10 @@ Enter a command:
 'add-birthday [name] [date]' - add birthday for name 'name' in format 'DD.MM.YYYY'
 'show-birthday[name]' - show birthday for name 'name'
 'birthdays' - show all birthdays from the phone book on the next week
+'search-by-name [name]' - shows all contacts with this name
+'search-by-birthday [date]' - shows all contacts with the specific birthday
+'search-by-emails [email]' - shows all contacts with the specific email
+'search-by-phones [phone1] [phone2] ...' - shows all contacts with the specific phone number
 'all' - print the contacnts phone book
 'close' or 'exit' - quit from the program
 'help' - print help message

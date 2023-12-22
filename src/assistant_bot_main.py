@@ -51,6 +51,10 @@ command_dict = {
     "show-address": show_address,
     "show-birthday": show_birthday,
     "birthdays": show_birthdays_next_week,
+    'search-by-name': search_by_name,
+    'search-by-birthday': search_by_birthday,
+    'search-by-emails': search_by_emails,
+    'search-by-phones': search_by_phones
 }
 
 

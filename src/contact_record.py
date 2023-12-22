@@ -77,6 +77,24 @@ class Record:
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
         )
+    
+    # Checks if the record field includes a value
+    # Compitable with arrays and literal constants 
+    #
+    # e.g. record.field_has_value('emails', 'test@test.com')
+    #
+    # @params [String] field_name
+    # @params [String] value
+    # @return [Bool]
+    def field_has_value(self, field_name, value):
+        fields = getattr(self, field_name)
+
+        if type(fields) is not list:
+            fields = [fields]
+
+        no_nones = [item for item in fields if item is not None]
+        field_values = list(map(lambda field: field.value, no_nones))
+        return value in field_values
 
     def add_phone(self, phone):
         if Phone.is_valid(phone):
