@@ -1,5 +1,65 @@
-from src.contact_data import *
+import datetime
+from src.utils.cli_parse_decorator import *
+from src.utils.validator import is_valid_phone
 
+
+class Field:
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return str(self.value)
+
+    def __eq__(self, other):
+        if isinstance(other, Field):
+            return self.value == other.value
+        return False
+
+    def __hash__(self):
+        return hash(self.value)
+
+
+class Name(Field):
+    def __init__(self, value):
+        super().__init__(value)
+
+
+class Birthday(Field):
+    def __init__(self, birthday):
+        try:
+            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y"))
+        except ValueError:
+            raise BirthdayValueError
+
+    def __str__(self):
+        return self.value.strftime("%d.%m.%Y")
+
+
+class Phone(Field):
+    def __init__(self, phone):
+        if not self.is_valid(phone):
+            raise PhoneValueError
+        super().__init__(phone)
+
+    @staticmethod
+    def is_valid(phone):
+        return is_valid_phone(phone)
+
+
+class Address(Field):
+    def __init__(self, address):
+        super().__init__(address)
+
+
+class Email(Field):
+    def __init__(self, email):
+        if not self.is_valid(email):
+            raise EmailValueError(email)
+        super().__init__(email)
+
+    @staticmethod
+    def is_valid(email):
+        return True  # TODO: should be implemented
 
 class Record:
     def __init__(self, name):
@@ -28,16 +88,16 @@ class Record:
 
     def edit_phone(self, old_phone, new_phone):
         if Phone.is_valid(new_phone):
-            phone = self.find_phone(old_phone)
+            phone = self.find_item(old_phone, self.phones)
             if phone:
                 phone.value = new_phone
             else:
-                raise PhoneValueNotExist
+                raise PhoneValueNotExist(self.name, old_phone)
         else:
             raise PhoneValueError
 
-    def find_phone(self, phone):
-        return next((item for item in self.phones if item.value == phone), None)
+    def find_item(self, item, collection):
+        return next((i for i in collection if i.value == item), None)
 
     def add_birthday(self, date):
         self.birthday = Birthday(date)
@@ -48,11 +108,29 @@ class Record:
         else:
             raise EmailValueError(email)
 
+    def edit_email(self, old_email, new_email):
+        if Email.is_valid(new_email):
+            email = self.find_item(old_email, self.emails)
+            if email:
+                email.value = new_email
+            else:
+                raise EmailValueNotExist(self.name, old_email)
+        else:
+            raise EmailValueError
+
     def remove_email(self, email):
         self.emails.remove(Email(email))
 
     def add_address(self, address):
         self.address.append(Address(address))
 
+    def edit_address(self, old_address, new_address):
+            address = self.find_item(old_address, self.address)
+            if address:
+                address.value = new_address
+            else:
+                raise AddressValueNotExist(self.name, old_address)
+
     def remove_address(self, address):
         self.address.remove(Address(address))
+
