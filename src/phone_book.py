@@ -181,6 +181,25 @@ def show_birthdays_next_week(_, contacts):
     )
 
 
+def search(value, field_name, contacts):
+    splitted_value = value.split(' ')
+    search_result = (map(lambda v: contacts.search_by(field_name, v), splitted_value))
+
+    return any(search_result)
+
+def search_by_name(args, contacts):
+    value = args[0]
+    return search(value, 'name', contacts)
+def search_by_birthday(args, contacts):
+    value = args[0]
+    return search(value, 'birthday', contacts)
+def search_by_emails(args, contacts):
+    value = args[0]
+    return search(value, 'emails', contacts)
+def search_by_phones(args, contacts):
+    value = args[0]
+    return search(value, 'phones', contacts)
+
 class AddressBook(UserDict):
     def __init__(self, load_from_file = True):
         """
@@ -206,6 +225,11 @@ class AddressBook(UserDict):
             del self.data[name]
         else:
             raise RecordDoesNotExistError
+        
+    def search_by(self, field_name, value):
+        records = list(self.data.values())
+
+        return list(filter(lambda record: record.field_has_value(field_name, value), records))
 
     def dump(self):
         """
