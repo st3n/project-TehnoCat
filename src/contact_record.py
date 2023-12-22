@@ -86,11 +86,11 @@ class Record:
     # @params [String] value
     # @return [Bool]
     def field_has_value(self, field_name, value):
-        field_value = getattr(self, field_name).value
-        if field_value is not list:
-            field_value = [field_value]
-        
-        return value in field_value
+        fields = getattr(self, field_name)
+        if fields is not list:
+            fields = [fields]
+        field_values = list(map(lambda field: field.value, fields))
+        return value in field_values
 
     def add_phone(self, phone):
         if Phone.is_valid(phone):
