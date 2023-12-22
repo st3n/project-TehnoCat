@@ -1,6 +1,7 @@
 from src.phone_book import *
+from src.utils.cli_parse_decorator import *
 
-
+@input_error
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
@@ -11,7 +12,9 @@ def show_help():
     print("possible commands:")
     print("'hello' - greetings message")
     print("'add [name] [phone]' - add new contact in the phone book")
-    print("'change [name] [phone]' - change the saved contact phone")
+    print("'change [name] [old_phone] [new_phone]' - change the saved contact phone")
+    print("'change [name] [old_email] [new_email]' - change the saved contact email")
+    print("'change [name] [old_address] | [new_address]' - change the saved contact address")
     print("remove [name]' - remove contact")
     print("remove [name] [phone]' - remove contact phone")
     print("remove [name] [email]' - remove contact email")
