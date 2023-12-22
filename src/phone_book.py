@@ -54,13 +54,24 @@ def remove_contact(args, contacts):
 @dump_contacts
 @input_error
 def change_contact(args, contacts):
-    name, old_phone, new_phone = args
+    if len(args) != 3:
+        raise ValueError
 
-    if name in contacts:
-        contacts[name].edit_phone(old_phone, new_phone)
-        return f"{old_phone} changed to {new_phone} for contact {name}"
-    else:
+    name = args[0]
+
+    if name not in contacts:
         raise RecordDoesNotExistError(name)
+
+    if "@" in args[1] and "@" in args[2]:
+        contacts[name].edit_email(args[1], args[2])
+        return f"{name}'s email '{args[1]}' changed to '{args[2]}'."
+
+    if args[1].isdigit():
+        contacts[name].edit_phone(args[1], args[2])
+        return f"{name}'s phone '{args[1]}' changed to '{args[2]}'."
+
+    contacts[name].edit_address(args[1], args[2])
+    return f"{name}'s address '{args[1]}' changed ro {args[2]}."
 
 
 @input_error
