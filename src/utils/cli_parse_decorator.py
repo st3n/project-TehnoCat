@@ -23,17 +23,20 @@ class PhoneValueNotExist(Exception):
         self.phone = phone
         self.message = f"Contact {name} does not have saved phone number: {phone}"
 
+
 class EmailValueNotExist(Exception):
     def __init__(self, name, email):
         self.name = name
         self.email = email
         self.message = f"Contact {name} does not have saved email: {email}"
 
+
 class AddressValueNotExist(Exception):
     def __init__(self, name, address):
         self.name = name
         self.phone = address
         self.message = f"Contact {name} does not have saved address: {address}"
+
 
 class EmailValueError(Exception):
     def __init__(self, email):

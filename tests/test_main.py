@@ -2,6 +2,7 @@ import unittest
 from src.phone_book import *
 from src.birthdays import *
 
+
 class TestAddressBook(unittest.TestCase):
     def setUp(self) -> None:
         self.book = AddressBook(load_from_file=False)
@@ -28,7 +29,7 @@ class TestAddressBook(unittest.TestCase):
         add_contact([self.name, self.phone], self.book)
         add_contact([self.name, "3213213211"], self.book)
         self.assertEqual(len(self.book.data[self.name].phones), 2)
-        
+
     def test_contact_remove_phone(self):
         add_contact([self.name, self.phone], self.book)
         new_phone = "3213213211"
@@ -69,7 +70,9 @@ class TestAddressBook(unittest.TestCase):
         change_contact([self.name, new_phone, changed_phone], self.book)
         self.assertEqual(len(self.book.data[self.name].phones), 2)
         collection = self.book.data[self.name].phones
-        self.assertIsNotNone(self.book.data[self.name].find_item(changed_phone, collection).value)
+        self.assertIsNotNone(
+            self.book.data[self.name].find_item(changed_phone, collection).value
+        )
 
     def test_contact_change_email(self):
         new_email = "foo@gmail.com"
@@ -79,34 +82,49 @@ class TestAddressBook(unittest.TestCase):
         change_contact([self.name, new_email, changed_email], self.book)
         self.assertEqual(len(self.book.data[self.name].emails), 1)
         collection = self.book.data[self.name].emails
-        self.assertIsNotNone(self.book.data[self.name].find_item(changed_email, collection).value)
+        self.assertIsNotNone(
+            self.book.data[self.name].find_item(changed_email, collection).value
+        )
 
     def test_contact_change_address(self):
         new_address = "Odesa Tirasposka 12"
         changed_address = "Kyiv Lomonosava 8"
         add_contact([self.name, self.phone], self.book)
         add_address([self.name, new_address], self.book)
-        result = change_contact([self.name, new_address,'|',  changed_address], self.book)
-        self.assertEqual(result, f"{self.name}'s address '{new_address}' changed to '{changed_address}'.")
+        result = change_contact(
+            [self.name, new_address, "|", changed_address], self.book
+        )
+        self.assertEqual(
+            result,
+            f"{self.name}'s address '{new_address}' changed to '{changed_address}'.",
+        )
         self.assertEqual(len(self.book.data[self.name].address), 1)
         collection = self.book.data[self.name].address
-        self.assertIsNotNone(self.book.data[self.name].find_item(changed_address, collection))
+        self.assertIsNotNone(
+            self.book.data[self.name].find_item(changed_address, collection)
+        )
 
     def test_contact_phone_number(self):
         phone = "123"
         call_result = add_contact([self.name, phone], self.book)
-        self.assertEqual(call_result, "Phone number is not correct. Expected format is 10 digits.")
+        self.assertEqual(
+            call_result, "Phone number is not correct. Expected format is 10 digits."
+        )
         self.assertEqual(len(self.book.data), 0)
 
         phone = "aaa123bbb3"
         call_result = add_contact([self.name, phone], self.book)
-        self.assertEqual(call_result, "Phone number is not correct. Expected format is 10 digits.")
+        self.assertEqual(
+            call_result, "Phone number is not correct. Expected format is 10 digits."
+        )
         self.assertEqual(len(self.book.data), 0)
 
     def test_contact_email(self):
         pass
-       # email = "abc@1"
-       # call_result = add_contact([self.name, self.phone], self.book)
 
-if __name__ == '__main__':
+    # email = "abc@1"
+    # call_result = add_contact([self.name, self.phone], self.book)
+
+
+if __name__ == "__main__":
     unittest.main()
