@@ -42,13 +42,13 @@ def get_birthdays_per_week(users):
     )
 
 
-users = [
-    {"name": "Bill Gates", "birthday": datetime(1955, 10, 28)},
-    {"name": "Jill Valentine", "birthday": datetime(1974, 11, 30)},
-    {"name": "Kate Spade", "birthday": datetime(1962, 12, 23)},
-    {"name": "Yosyp Lozynskyi", "birthday": datetime(1807, 12, 20)},
-    {"name": "Kim Kardashian", "birthday": datetime(1980, 10, 21)},
-    {"name": "Ilon Mask", "birthday": datetime(1971, 6, 28)},
-]
+#users = [
+ #   {"name": "Bill Gates", "birthday": datetime(1955, 10, 28)},
+ #   {"name": "Jill Valentine", "birthday": datetime(1974, 11, 30)},
+  #  {"name": "Kate Spade", "birthday": datetime(1962, 12, 23)},
+ #   {"name": "Yosyp Lozynskyi", "birthday": datetime(1807, 12, 20)},
+  #  {"name": "Kim Kardashian", "birthday": datetime(1980, 10, 21)},
+ #   {"name": "Ilon Mask", "birthday": datetime(1971, 6, 28)},
 
-get_birthdays_per_week(users)
+
+#get_birthdays_per_week(users)

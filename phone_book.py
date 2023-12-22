@@ -5,7 +5,7 @@ from phone_book import *
 from next_week_birthdays import get_birthdays_per_week
 from record import Record
 from consol import *
-
+from rich.console import Console
 
 @input_error
 def add_contact(args, contacts):
@@ -20,8 +20,8 @@ def add_contact(args, contacts):
         record = Record(name)
         record.add_phone(phone)
         contacts.add_record(record)
-
-    return f"Phone number {phone} for contact {name} added."
+        console = Console()
+    return console.print(f"[bold purple]Phone number[/bold purple] {phone} [bold purple]for contact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n")
 
 
 @input_error
@@ -35,7 +35,8 @@ def change_contact(args, contacts):
         record = contacts[name]
         # here could be more suitable logic
         record.phones[0].value = new_phone
-        return f"Contact {name} new phone number is {new_phone}."
+        console = Console()
+        return console.print(f"[bold purple]Contact [/bold purple][bold cyan]{name}[/bold cyan] [bold purple]new phone number is [/bold purple]{new_phone}.\n")
     else:
         raise RecordDoesNotExistError
 
@@ -73,7 +74,9 @@ def add_birthday(args, contacts):
         raise RecordDoesNotExistError
 
     contact.add_birthday(date)
-    return "Birthday added."
+    console = Console()
+    return console.print("[bold purple]Birthday added[/bold purple].\n")
+                        
 
 
 @input_error

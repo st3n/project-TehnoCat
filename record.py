@@ -8,13 +8,13 @@ class Record:
         self.birthday = Birthday(birthday) if birthday else None
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {', '.join(p.value for p in self.phones)}"
+        return f"[bold purple]Contact name:[/bold purple] {self.name.value}[bold purple], phones: [/bold purple]{', '.join(p.value for p in self.phones)}\n"
 
     def add_phone(self, phone):
         if Phone.is_valid_phone(phone):
             self.phones.append(Phone(phone))
         else:
-            raise ValueError("Error: the phone number must be 10 digits")
+            raise ValueError("[bold yellow]Error: the phone number must be 10 digits[/bold yellow]\U0001F914\n")
 
     def remove_phone(self, phone):
         self.phones.remove(phone)
@@ -26,16 +26,16 @@ class Record:
                     item.value = new_phone
                     return
             raise ValueError(
-                f"Error: the phone number {old_phone} not found in the record."
+                f"[bold yellow]Error: the phone number {old_phone} not found in the record.[/bold yellow]\U0001F914\n"
             )
         else:
-            raise ValueError("Error: the phone number must be 10 digits")
+            raise ValueError("[bold yellow]Error: the phone number must be 10 digits[/bold yellow]\U0001F914\n")
 
     def find_phone(self, phone):
         for item in self.phones:
             if item.value == phone:
                 return item.value
-        raise ValueError(f"Error: the phone number {phone} not found in the record.")
+        raise ValueError(f"[bold yellow]Error: the phone number {phone} not found in the record.[/bold yellow]\U0001F914\n")
 
     def add_birthday(self, date):
         self.birthday = Birthday(date)

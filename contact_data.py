@@ -30,7 +30,7 @@ class Birthday(Field):
 class Phone(Field):
     def __init__(self, phone):
         if not self.is_valid_phone(phone):
-            raise ValueError("Error: The phone number must be 10 digits")
+            raise ValueError("[bold yellow]Error: The phone number must be 10 digits[/bold yellow]\U0001F914\n")
         super().__init__(phone)
 
     @staticmethod

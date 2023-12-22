@@ -3,6 +3,7 @@ from rich.console import Console
 from rich import print
 from rich.table import Table
 
+
 console = Console()
 
 def parse_input(user_input):
@@ -37,26 +38,27 @@ def show_help():
 
 def main():
     contacts = AddressBook()
-    print("[bold blue]Welcome to the assistant bot![/bold blue]")  
+    print("[bold blue]Welcome to the assistant bot![/bold blue]\n\U0001F929  \U0001F929  \U0001F929\n") 
+    
     while True:
         user_input = input("Enter a command: ").strip().lower()
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
-            print("[bold magenta]Goodbye![/bold magenta]")  
+            print("[bold magenta]Goodbye![/bold magenta]\n\U0001FAE1")  
             break
         elif command == "hello":
-            print("How can I help you?")
+            print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
         elif command == "add":
-            print(add_contact(args, contacts))
+            add_contact(args, contacts)
         elif command == "change":
-            print(change_contact(args, contacts))
+            change_contact(args, contacts)
         elif command == "phone":
             print(show_phone(args, contacts))
         elif command == "all":
             show_all(args, contacts, console)
         elif command == "add-birthday":
-            print(add_birthday(args, contacts))
+            add_birthday(args, contacts)
         elif command == "show-birthday":
             print(show_birthday(args, contacts))
         elif command == "birthdays":
@@ -64,7 +66,7 @@ def main():
         elif command == "help":
             show_help()
         else:
-            print("[bold yellow]Invalid command.[/bold yellow]")
+            print("[bold yellow]Invalid command.[/bold yellow]\n\U0001F914\n")
 
 if __name__ == "__main__":
     main()
