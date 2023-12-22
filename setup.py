@@ -10,6 +10,6 @@ setup(
     license="MIT",
     packages=["src"],
     include_package_data=True,
-    entry_points={"console_scripts": ["tehnocat = src.assistant_bot:main"]},
+    entry_points={"console_scripts": ["tehnocat = src.assistant_bot_main:main"]},
     install_requires=["prompt_toolkit", "jaro-winkler"],
 )
