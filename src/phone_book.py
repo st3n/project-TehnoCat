@@ -2,12 +2,12 @@ from collections import UserDict
 import os
 import pickle
 
-from utils.dump_decorator import dump_contacts
-from utils.validator import is_valid_phone
-from utils.cli_parse_decorator import *
-from phone_book import *
-from next_week_birthdays import get_birthdays_per_week
-from record import Record
+from src.utils.validator import is_valid_phone
+from src.utils.cli_parse_decorator import *
+from src.utils.dump_decorator import dump_contacts
+from src.phone_book import *
+from src.birthdays import get_birthdays_per_week
+from src.contact_record import Record
 
 
 @dump_contacts
@@ -54,13 +54,28 @@ def remove_contact(args, contacts):
 @dump_contacts
 @input_error
 def change_contact(args, contacts):
-    name, old_phone, new_phone = args
+    name = args[0]
 
-    if name in contacts:
-        contacts[name].edit_phone(old_phone, new_phone)
-        return f"{old_phone} changed to {new_phone} for contact {name}"
-    else:
+    if name not in contacts:
         raise RecordDoesNotExistError(name)
+
+    if len(args) == 3:
+        if "@" in args[1] and "@" in args[2]:
+            contacts[name].edit_email(args[1], args[2])
+            return f"{name}'s email '{args[1]}' changed to '{args[2]}'."
+
+        if args[1].isdigit() and args[2].isdigit():
+            contacts[name].edit_phone(args[1], args[2])
+            return f"{name}'s phone '{args[1]}' changed to '{args[2]}'."
+
+    addresses = [
+        x.strip() for x in " ".join(args[1:]).split(sep="|") if x != "" and x != " "
+    ]
+    if len(addresses) != 2:
+        raise ValueError
+
+    contacts[name].edit_address(addresses[0], addresses[1])
+    return f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'."
 
 
 @input_error
@@ -171,7 +186,7 @@ def show_birthdays_next_week(_, contacts):
 
 
 class AddressBook(UserDict):
-    def __init__(self):
+    def __init__(self, load_from_file=True):
         """
         Initialize an AddressBook instance.
 
@@ -180,7 +195,9 @@ class AddressBook(UserDict):
         """
         super().__init__()
         self.data = {}
-        self.load()
+
+        if load_from_file:
+            self.load()
 
     def add_record(self, record):
         self.data[record.name.value] = record
