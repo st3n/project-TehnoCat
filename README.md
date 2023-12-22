@@ -32,7 +32,7 @@ Enter a command:
 'birthdays' - show all birthdays from the phone book on the next week
 'search-by-name [name]' - shows all contacts with this name
 'search-by-birthday [date]' - shows all contacts with the specific birthday
-'search-by-email [email]' - shows all contacts with the specific email
+'search-by-emails [email]' - shows all contacts with the specific email
 'search-by-phones [phone1] [phone2] ...' - shows all contacts with the specific phone number
 'all' - print the contacnts phone book
 'close' or 'exit' - quit from the program
