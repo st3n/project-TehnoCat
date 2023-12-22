@@ -1,6 +1,6 @@
 import unittest
 from src.phone_book import *
-from src.next_week_birthdays import *
+from src.birthdays import *
 
 class TestAddressBook(unittest.TestCase):
     def setUp(self) -> None:
