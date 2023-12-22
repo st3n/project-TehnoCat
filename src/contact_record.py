@@ -1,6 +1,6 @@
 import datetime
 from src.utils.cli_parse_decorator import *
-from src.utils.validator import is_valid_phone
+from src.utils.validator import is_valid_phone, is_valid_email
 
 
 class Field:
@@ -59,7 +59,7 @@ class Email(Field):
 
     @staticmethod
     def is_valid(email):
-        return True  # TODO: should be implemented
+        return is_valid_email(email)
 
 
 class Record:
