@@ -37,5 +37,12 @@ Enter a command:
 'all' - print the contacnts phone book
 'close' or 'exit' - quit from the program
 'help' - print help message
-
+'add [name] [note]' - add a new note to the phone book
+'show all notes' - display all notes in the phone book
+'search note [name]' - search for a note by contact name or tag
+'add [tag]' - add a tag to a contact's note
+'search [tag]' - search for notes by tag
+'edit note [name] [note]' - edit a note for a specific contact
+'delete note [name]' - delete a note for a specific contact
+'back' - return to the previous menu or exit the program
 ```
