@@ -12,11 +12,11 @@ def parse_input(user_input):
 
 def show_help():
     print("possible commands:")
+
     for command_data in bot_commands():
         name = f"{command_data['name']}"
         args = f" [{', '.join(command_data['args'])}]" if command_data['args'] else ''
         print(f"'{name}{args}' - {command_data['desc']}")
-
 
 def exit(history_file):
     readline.write_history_file(history_file)
