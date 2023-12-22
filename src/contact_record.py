@@ -88,9 +88,12 @@ class Record:
     # @return [Bool]
     def field_has_value(self, field_name, value):
         fields = getattr(self, field_name)
-        if fields is not list:
+
+        if type(fields) is not list:
             fields = [fields]
-        field_values = list(map(lambda field: field.value, fields))
+
+        no_nones = [item for item in fields if item is not None]
+        field_values = list(map(lambda field: field.value, no_nones))
         return value in field_values
 
     def add_phone(self, phone):

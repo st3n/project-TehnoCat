@@ -187,9 +187,13 @@ def show_birthdays_next_week(_, contacts):
 
 def search(value, field_name, contacts):
     splitted_value = value.split(' ')
-    search_result = (map(lambda v: contacts.search_by(field_name, v), splitted_value))
+    search_result = []
+    for v in splitted_value:
+        search_result += contacts.search_by(field_name, v)
 
-    return any(search_result)
+    res = f"{len(search_result)} records found\n\n"
+    res += "\n".join(list(map(lambda sr: str(sr), search_result)))
+    return res
 
 def search_by_name(args, contacts):
     value = args[0]
@@ -232,8 +236,8 @@ class AddressBook(UserDict):
         
     def search_by(self, field_name, value):
         records = list(self.data.values())
-
         return list(filter(lambda record: record.field_has_value(field_name, value), records))
+
 
     def dump(self):
         """
