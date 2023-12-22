@@ -61,6 +61,7 @@ class Email(Field):
     def is_valid(email):
         return True  # TODO: should be implemented
 
+
 class Record:
     def __init__(self, name):
         self.name = Name(name)
@@ -140,12 +141,11 @@ class Record:
         self.address.append(Address(address))
 
     def edit_address(self, old_address, new_address):
-            address = self.find_item(old_address, self.address)
-            if address:
-                address.value = new_address
-            else:
-                raise AddressValueNotExist(self.name, old_address)
+        address = self.find_item(old_address, self.address)
+        if address:
+            address.value = new_address
+        else:
+            raise AddressValueNotExist(self.name, old_address)
 
     def remove_address(self, address):
         self.address.remove(Address(address))
-

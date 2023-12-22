@@ -9,4 +9,5 @@ def dump_contacts(func):
         contacts.dump()
         # Return the original result
         return result
+
     return wrapper
