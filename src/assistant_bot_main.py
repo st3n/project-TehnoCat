@@ -1,6 +1,9 @@
-from phone_book import *
+import readline
+from src.phone_book import *
+from src.utils.cli_parse_decorator import *
 
 
+@input_error
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
@@ -11,7 +14,11 @@ def show_help():
     print("possible commands:")
     print("'hello' - greetings message")
     print("'add [name] [phone]' - add new contact in the phone book")
-    print("'change [name] [phone]' - change the saved contact phone")
+    print("'change [name] [old_phone] [new_phone]' - change the saved contact phone")
+    print("'change [name] [old_email] [new_email]' - change the saved contact email")
+    print(
+        "'change [name] [old_address] | [new_address]' - change the saved contact address"
+    )
     print("remove [name]' - remove contact")
     print("remove [name] [phone]' - remove contact phone")
     print("remove [name] [email]' - remove contact email")
@@ -48,15 +55,32 @@ command_dict = {
 }
 
 
+def exit(history_file):
+    readline.write_history_file(history_file)
+    print("Good bye!")
+
+
 def main():
+    command_history = "../.command_history"
     contacts = AddressBook()
     print("Welcome to the assistant bot!")
+
+    try:
+        readline.read_history_file(command_history)
+    except FileNotFoundError:
+        pass
+
     while True:
-        user_input = input("Enter a command: ").strip()
+        try:
+            user_input = input("Enter a command: ").strip()
+        except KeyboardInterrupt:
+            exit(command_history)
+            break
+
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
-            print("Good bye!")
+            exit(command_history)
             break
         elif command == "hello":
             print("How can I help you?")

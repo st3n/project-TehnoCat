@@ -1,6 +1,28 @@
 # Phone book assistant
+## Installation
+1. Clone repository and move to the root:
+```shell
+git clone https://github.com/st3n/project-TehnoCat.git
+cd project-TehnoCat
 ```
-possible commands:
+2. Create and activate venv
+```shell
+conda create -n <name_of_venv>
+conda activate <name_of_venv>
+```
+3. Install package
+```shell
+pip install -e .
+```
+4. Now the assistant is available by typing `tehnocat`:
+```shell
+foo@bar:~$ tehnocat
+Welcome to the assistant bot!
+Enter a command: 
+```
+
+## Possible commands
+```
 'hello' - greetings message
 'add [name] [phone]' - add new contact in the phone book
 'change [name] [phone]' - change the saved contact phone
