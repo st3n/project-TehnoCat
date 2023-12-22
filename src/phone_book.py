@@ -54,7 +54,6 @@ def remove_contact(args, contacts):
 @dump_contacts
 @input_error
 def change_contact(args, contacts):
-
     name = args[0]
 
     if name not in contacts:
@@ -69,7 +68,9 @@ def change_contact(args, contacts):
             contacts[name].edit_phone(args[1], args[2])
             return f"{name}'s phone '{args[1]}' changed to '{args[2]}'."
 
-    addresses = [x.strip() for x in " ".join(args[1:]).split(sep="|") if x != '' and x != ' ']
+    addresses = [
+        x.strip() for x in " ".join(args[1:]).split(sep="|") if x != "" and x != " "
+    ]
     if len(addresses) != 2:
         raise ValueError
 
@@ -185,7 +186,7 @@ def show_birthdays_next_week(_, contacts):
 
 
 class AddressBook(UserDict):
-    def __init__(self, load_from_file = True):
+    def __init__(self, load_from_file=True):
         """
         Initialize an AddressBook instance.
 
