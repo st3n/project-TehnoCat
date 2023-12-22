@@ -86,10 +86,11 @@ class TestAddressBook(unittest.TestCase):
         changed_address = "Kyiv Lomonosava 8"
         add_contact([self.name, self.phone], self.book)
         add_address([self.name, new_address], self.book)
-        change_contact([self.name, new_address, changed_address], self.book)
+        result = change_contact([self.name, new_address,'|',  changed_address], self.book)
+        self.assertEqual(result, f"{self.name}'s address '{new_address}' changed to '{changed_address}'.")
         self.assertEqual(len(self.book.data[self.name].address), 1)
         collection = self.book.data[self.name].address
-        self.assertIsNotNone(self.book.data[self.name].find_item(changed_address, collection).value)
+        self.assertIsNotNone(self.book.data[self.name].find_item(changed_address, collection))
 
     def test_contact_phone_number(self):
         phone = "123"

@@ -46,11 +46,10 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
 
-        # TODO: rewrite these Valuerror with more descriptive way, add name as paramter here
         except ValueError:
             return {
                 "add_contact": f"{error_msg} Use 'add [name] [phone number]'.",
-                "change_contact": f"{error_msg} Use 'change [name] [old phone number] [new phone number]'.",
+                "change_contact": f"{error_msg} Use 'change [name] [old [phone,email,address]] [new [phone,email,address]]'.",
                 "remove_contact": f"{error_msg} Use 'remove [name]'.",
                 "show_phone": f"{error_msg} Use 'phone [name]'.",
                 "show_all": f"{error_msg} Use 'all' without arguments.",
@@ -62,9 +61,13 @@ def input_error(func):
                 "show_address": f"{error_msg} Use 'show-address [name]'.",
             }[func.__name__]
         except (
+            EmailValueError,
+            EmailValueNotExist,
+            AddressValueNotExist,
             RecordAlreadyExistsError,
             RecordDoesNotExistError,
             PhoneValueError,
+            PhoneValueNotExist,
             BirthdayValueError,
         ) as e:
             return e.message
