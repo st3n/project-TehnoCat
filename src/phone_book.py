@@ -171,7 +171,7 @@ def show_birthdays_next_week(_, contacts):
 
 
 class AddressBook(UserDict):
-    def __init__(self):
+    def __init__(self, load_from_file = True):
         """
         Initialize an AddressBook instance.
 
@@ -180,7 +180,9 @@ class AddressBook(UserDict):
         """
         super().__init__()
         self.data = {}
-        self.load()
+
+        if load_from_file:
+            self.load()
 
     def add_record(self, record):
         self.data[record.name.value] = record
