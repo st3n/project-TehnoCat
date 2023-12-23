@@ -4,6 +4,7 @@ error_msg = "[bold yellow]Invalid command format.[/bold yellow] \U0001F914"
 class BirthdayValueError(Exception):
     message = "\U0001F914[bold green]Data format is not correct for birthday. Expected format is DD.MM.YYYY.[/bold green]\n"
 
+
 class RecordAlreadyExistsError(Exception):
     message = "[bold yellow]Record already exists[/bold yellow] \U0001F917.\n [bold green]Use change_contact [name] instead[/bold green]\n"
 
@@ -14,8 +15,6 @@ class RecordDoesNotExistError(Exception):
 
 class PhoneValueError(Exception):
     message = f"{error_msg}\n[bold green]Phone number is not correct. Expected format is 10 digits.[/bold green]\n"
-
-
 
 
 class PhoneValueNotExist(Exception):
@@ -63,7 +62,6 @@ def input_error(func):
                 "show_email": f"{error_msg} \n[bold green]Use 'show-email. After the command, write your name.[/bold green]\n",
                 "show_address": f"{error_msg}\n[bold green] Use 'show-address. After the command, write your name.[/bold green]\n",
                 "show_birthday": f"{error_msg}\n[bold green]Use 'show-birthday After the command, write your name.[/bold green]\n",
-
             }[func.__name__]
         except (
             EmailValueError,

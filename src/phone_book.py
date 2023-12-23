@@ -2,243 +2,17 @@ from collections import UserDict
 import os
 import pickle
 from rich import print
-import datetime
 
 from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
 from src.utils.dump_decorator import dump_contacts
+from src.phone_book import *
+from src.birthdays import *
 from src.contact_record import Record
-from src.consol import display_table_all
-from src.birthdays import get_birthdays_per_week, get_birthdays_in_days
+from src.consol import ConsolePrinter
 
 
-@dump_contacts
-@input_error
-def add_contact(args, contacts):
-    name, phone = args
-
-    if name in contacts:
-        contacts[name].add_phone(phone)
-    else:
-        record = Record(name)
-        record.add_phone(phone)
-        contacts.add_record(record)
-
-    return f"[bold purple]Phone number[/bold purple] {phone} [bold purple]for contact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n"
-
-
-@dump_contacts
-@input_error
-def remove_contact(args, contacts):
-    if len(args) < 1:
-        raise ValueError
-
-    name = args[0]
-
-    if len(args) == 1:
-        contacts.delete(name)
-        return f"[magenta]Contact[/magenta] [bold cyan]{name}[/bold cyan] [magenta]removed[/magenta].\n"
-
-    if len(args) == 2:
-        if "@" in args[1]:
-            contacts[name].remove_email(args[1])
-            return f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args[1]}' [magenta]removed[/magenta].\n"
-
-        if args[1].isdigit():
-            contacts[name].remove_phone(args[1])
-            return f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args[1]}' [magenta]removed[/magenta].\n"
-    else:
-        full_address = " ".join(args[1:])
-        contacts[name].remove_address(full_address)
-        return f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{full_address}' [magenta]removed[/magenta].\n"
-
-
-@dump_contacts
-@input_error
-def change_contact(args, contacts):
-    name = args[0]
-
-    if name not in contacts:
-        raise RecordDoesNotExistError(name)
-
-    if len(args) == 3:
-        if "@" in args[1] and "@" in args[2]:
-            contacts[name].edit_email(args[1], args[2])
-            return f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args[1]}' changed to '{args[2]}'.\n"
-
-        if args[1].isdigit() and args[2].isdigit():
-            contacts[name].edit_phone(args[1], args[2])
-            return f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args[1]}'[bold purple] changed to[/bold purple] '{args[2]}'.\n"
-
-    addresses = [
-        x.strip() for x in " ".join(args[1:]).split(sep="|") if x != "" and x != " "
-    ]
-    if len(addresses) != 2:
-        raise ValueError
-
-    contacts[name].edit_address(addresses[0], addresses[1])
-    return f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{addresses[0]}' [bold purple]changed to [/bold purple]'{addresses[1]}'.\n"
-
-
-@input_error
-def show_phone(args, contacts):
-    if len(args) < 1:
-        raise ValueError
-
-    name = args[0]
-    contact = contacts.find(name)
-    if not contact:
-        raise RecordDoesNotExistError
-
-    return str(contact)
-
-
-@input_error
-def show_all(args, contacts):
-    if args:
-        raise ValueError
-
-    if not contacts.data:
-        raise KeyError
-    else:
-        display_table_all(contacts)
-
-
-@dump_contacts
-@input_error
-def add_birthday(args, contacts):
-    name, date = args
-    contact = contacts.find(name)
-    if not contact:
-        raise RecordDoesNotExistError
-
-    contact.add_birthday(date)
-
-    return "[bold purple]Birthday added[/bold purple].\n"
-
-
-@dump_contacts
-@input_error
-def add_email(args, contacts):
-    name, email = args
-    contact = contacts.find(name)
-    if not contact:
-        raise RecordDoesNotExistError
-
-    contact.add_email(email)
-    return "[bold purple]Email added[/bold purple].\n"
-
-
-@dump_contacts
-@input_error
-def add_address(args, contacts):
-    if len(args) < 2:
-        raise ValueError
-
-    contact = contacts.find(args[0])
-    if not contact:
-        raise RecordDoesNotExistError
-
-    contact.add_address(" ".join(args[1:]))
-    return "[bold purple]Address added[/bold purple].\n"
-
-
-@input_error
-def show_birthday(args, contacts):
-    if len(args) == 0:
-        raise ValueError
-
-    name = args[0]
-    contact = contacts.find(name)
-    if not contact:
-        raise RecordDoesNotExistError
-
-    return contact.birthday
-
-
-@input_error
-def show_email(args, contacts):
-    if len(args) == 0:
-        raise ValueError
-    name = args[0]
-    contact = contacts.find(name)
-    if not contact:
-        raise RecordDoesNotExistError
-
-    return contact.emails[0]
-
-
-@input_error
-def show_address(args, contacts):
-    if len(args) == 0:
-        raise ValueError
-    name = args[0]
-    contact = contacts.find(name)
-    if not contact:
-        raise RecordDoesNotExistError
-
-    return contact.address[0]
-
-
-@input_error
-def show_birthdays_next_week(_, contacts):
-    contacts_with_birthdays = list(
-        filter(lambda name: contacts.find(name).birthday is not None, contacts)
-    )
-    return get_birthdays_per_week(
-        map(
-            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value},
-            contacts_with_birthdays,
-        )
-    )
-
-
-def show_birthdays_in_days(args, contacts):
-    days_from_now = args[0]
-    contacts_with_birthdays = list(
-        filter(lambda name: contacts.find(name).birthday is not None, contacts)
-    )
-    return get_birthdays_in_days(
-        map(
-            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value},
-            contacts_with_birthdays,
-        ),
-        int(days_from_now),
-    )
-
-
-def search(value, field_name, contacts):
-    value = value.split(' ') if type(value) is str else [value]
-    search_result = []
-    
-    for v in value:
-        search_result += contacts.search_by(field_name, v)
-
-    res = f"{len(search_result)} records found\n\n"
-    res += "\n".join(list(map(lambda sr: str(sr), search_result)))
-    return res
-
-
-def search_by_name(args, contacts):
-    value = args[0]
-    return search(value, "name", contacts)
-
-
-def search_by_birthday(args, contacts):
-    value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
-    return search(value, 'birthday', contacts)
-
-def search_by_emails(args, contacts):
-    value = args[0]
-    return search(value, "emails", contacts)
-
-
-def search_by_phones(args, contacts):
-    value = args[0]
-    return search(value, "phones", contacts)
-
-
-class AddressBook(UserDict):
+class PhoneBook(UserDict):
     def __init__(self, load_from_file=True):
         """
         Initialize an AddressBook instance.
@@ -252,6 +26,8 @@ class AddressBook(UserDict):
         if load_from_file:
             self.load()
 
+        self.console = ConsolePrinter(self)
+
     def add_record(self, record):
         self.data[record.name.value] = record
 
@@ -263,12 +39,6 @@ class AddressBook(UserDict):
             del self.data[name]
         else:
             raise RecordDoesNotExistError
-
-    def search_by(self, field_name, value):
-        records = list(self.data.values())
-        return list(
-            filter(lambda record: record.field_has_value(field_name, value), records)
-        )
 
     def dump(self):
         """
@@ -289,3 +59,228 @@ class AddressBook(UserDict):
         if os.path.exists(FILENAME):
             with open(FILENAME, "rb") as file:
                 self.data = pickle.load(file)
+
+    @dump_contacts
+    @input_error
+    def add_contact(self, args):
+        name, phone = args
+
+        if name in self.data:
+            self.data[name].add_phone(phone)
+        else:
+            record = Record(name)
+            record.add_phone(phone)
+            self.data.add_record(record)
+
+        print(f"Phone number {phone} for contact {name} added.")
+
+    @dump_contacts
+    @input_error
+    def remove_contact(self, args):
+        if len(args) < 1:
+            raise ValueError
+
+        name = args[0]
+
+        if len(args) == 1:
+            self.delete(name)
+            print(f"Contact {name} removed.")
+            return
+
+        if len(args) == 2:
+            if "@" in args[1]:
+                self.data[name].remove_email(args[1])
+                print(f"{name}'s email '{args[1]}' removed.")
+            elif args[1].isdigit():
+                self.data[name].remove_phone(args[1])
+                print(f"{name}'s phone '{args[1]}' removed.")
+        else:
+            full_address = " ".join(args[1:])
+            self.data[name].remove_address(full_address)
+            print(f"{name}'s address '{full_address}' removed.")
+
+    @dump_contacts
+    @input_error
+    def change_contact(self, args):
+        name = args[0]
+
+        if name not in self.data:
+            raise RecordDoesNotExistError(name)
+
+        if len(args) == 3:
+            if "@" in args[1] and "@" in args[2]:
+                self.data[name].edit_email(args[1], args[2])
+                print(f"{name}'s email '{args[1]}' changed to '{args[2]}'.")
+                return
+            elif args[1].isdigit() and args[2].isdigit():
+                self.data[name].edit_phone(args[1], args[2])
+                print(f"{name}'s phone '{args[1]}' changed to '{args[2]}'.")
+                return
+
+        addresses = [
+            x.strip() for x in " ".join(args[1:]).split(sep="|") if x != "" and x != " "
+        ]
+        if len(addresses) != 2:
+            raise ValueError
+
+        self.data[name].edit_address(addresses[0], addresses[1])
+        print(f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'.")
+
+    @input_error
+    def show_phone(self, args):
+        if len(args) < 1:
+            raise ValueError
+
+        name = args[0]
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        print(str(contact))
+
+    @input_error
+    def show_all(self):
+        if not self.data:
+            raise KeyError
+
+        self.console.display_table_all()
+
+    def show_help(self):
+        self.console.display_help()
+
+    @dump_contacts
+    @input_error
+    def add_birthday(self, args):
+        name, date = args
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        self.data.add_birthday(date)
+        print("Birthday added.")
+
+    @dump_contacts
+    @input_error
+    def add_email(self, args):
+        name, email = args
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        contact.add_email(email)
+        print("Email added.")
+
+    @dump_contacts
+    @input_error
+    def add_address(self, args):
+        contact = self.find(args[0])
+        if not contact:
+            raise RecordDoesNotExistError
+
+        contact.add_address(" ".join(args[1:]))
+        print("Address added.")
+
+    @input_error
+    def show_birthday(self, args):
+        if len(args) == 0:
+            raise ValueError
+
+        name = args[0]
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        print(contact.birthday)
+
+    @input_error
+    def show_email(self, args):
+        if len(args) == 0:
+            raise ValueError
+        name = args[0]
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        print(contact.emails[0])
+
+    @input_error
+    def show_address(self, args):
+        if len(args) == 0:
+            raise ValueError
+        name = args[0]
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        print(contact.address[0])
+
+    def hello(self):
+        print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
+
+    def exit(self):
+        print("[bold magenta]Goodbye![/bold magenta]\n\U0001FAE1")
+        raise SystemExit(0)
+
+    @input_error
+    @input_error
+    def show_birthdays_next_week(self):
+        contacts_with_birthdays = list(
+            filter(lambda name: self.find(name).birthday is not None, self.data)
+        )
+        print(
+            get_birthdays_per_week(
+                map(
+                    lambda name: {
+                        "name": name,
+                        "birthday": self.find(name).birthday.value,
+                    },
+                    contacts_with_birthdays,
+                )
+            )
+        )
+
+    @input_error
+    def show_birthdays_in_days(self, args):
+        days_from_now = args[0]
+        contacts_with_birthdays = list(
+            filter(lambda name: self.find(name).birthday is not None, self.data)
+        )
+        print(
+            get_birthdays_in_days(
+                map(
+                    lambda name: {
+                        "name": name,
+                        "birthday": self.find(name).birthday.value,
+                    },
+                    contacts_with_birthdays,
+                ),
+                int(days_from_now),
+            )
+        )
+
+    def search(self, value, field_name):
+        value = value.split(" ") if type(value) is str else [value]
+        search_result = []
+
+        for v in value:
+            search_result += self.search_by(field_name, v)
+
+        res = f"{len(search_result)} records found\n\n"
+        res += "\n".join(list(map(lambda sr: str(sr), search_result)))
+        return res
+
+    def search_by_name(self, args):
+        value = args[0]
+        return self.search(value, "name")
+
+    def search_by_birthday(self, args):
+        value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
+        return self.search(value, "birthday")
+
+    def search_by_emails(self, args):
+        value = args[0]
+        return self.search(value, "emails")
+
+    def search_by_phones(self, args):
+        value = args[0]
+        return self.search(value, "phones")

@@ -105,21 +105,19 @@ class TestAddressBook(unittest.TestCase):
         )
 
     def test_contact_phone_number(self):
-        invalid_phone_str = "[bold yellow]Invalid command format.[/bold yellow] 🤔\n[bold green]Phone number is not " \
-                            "correct. Expected format is 10 digits.[/bold green]\n"
+        invalid_phone_str = (
+            "[bold yellow]Invalid command format.[/bold yellow] 🤔\n[bold green]Phone number is not "
+            "correct. Expected format is 10 digits.[/bold green]\n"
+        )
 
         phone = "123"
         call_result = add_contact([self.name, phone], self.book)
-        self.assertEqual(
-            call_result, invalid_phone_str
-        )
+        self.assertEqual(call_result, invalid_phone_str)
         self.assertEqual(len(self.book.data), 0)
 
         phone = "aaa123bbb3"
         call_result = add_contact([self.name, phone], self.book)
-        self.assertEqual(
-            call_result, invalid_phone_str
-        )
+        self.assertEqual(call_result, invalid_phone_str)
         self.assertEqual(len(self.book.data), 0)
 
     def test_contact_email(self):
