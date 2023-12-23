@@ -7,7 +7,7 @@ from src.utils.cli_parse_decorator import *
 from src.utils.dump_decorator import dump_contacts
 from src.phone_book import *
 from src.contact_record import Record
-from src.consol import *
+from src.consol import display_table_all
 from src.birthdays import get_birthdays_per_week, get_birthdays_in_days
 
 

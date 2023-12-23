@@ -139,7 +139,7 @@ def bot_commands():
         },
         {"name": "close", "args": [], "desc": "quit from the program"},
         {"name": "exit", "args": [], "desc": "quit from the program"},
-        {"name": "help", "args": [], "desc": "print help message"},
+        {"name": "help", "args": [], "desc": "print help message", "func": "show_help"},
     ]
 
 
