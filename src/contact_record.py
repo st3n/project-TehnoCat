@@ -96,7 +96,7 @@ class Record:
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
             f"notes: {self.notes.value}"
-            f"tags: {self.notes_tags}"
+            f"tags: {[tag.value for tag in self.notes_tags]}"
         )
 
     # Checks if the record field includes a value
@@ -116,7 +116,7 @@ class Record:
         no_nones = [item for item in fields if item is not None]
         field_values = list(map(lambda field: field.value, no_nones))
 
-        return any(value in word.lower() for word in field_values)
+        return any(value.lower() in word.lower() for word in field_values)
 
     def add_phone(self, phone):
         if Phone.is_valid(phone):

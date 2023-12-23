@@ -7,7 +7,8 @@ def bot_commands():
     {
         'name': 'hello',
         'args': [],
-        'desc': 'greetings message'
+        'desc': 'greetings message',
+        'func': 'hello',
     },
     {
         'name': 'add',
