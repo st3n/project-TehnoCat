@@ -1,7 +1,7 @@
 import readline
-from src.phone_book import *
-from src.utils.cli_parse_decorator import *
-from src.command import bot_commands, find_closest_command, CommandCompleter, command_exists, find_command_by_name
+from phone_book import *
+from utils.cli_parse_decorator import *
+from command import bot_commands, find_closest_command, CommandCompleter, command_exists, find_command_by_name
 from prompt_toolkit import PromptSession
 
 @input_error

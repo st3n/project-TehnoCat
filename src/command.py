@@ -9,10 +9,22 @@ def bot_commands():
         'desc': 'greetings message'
     },
     {
+        'name': 'add-note',
+        'args': ['name', 'note'],
+        'desc': 'add new note in the phone book',
+        'func': 'add_note'
+    },
+    {
         'name': 'add',
         'args': ['name', 'phone'],
         'desc': 'add new contact in the phone book',
         'func': 'add_contact'
+    },
+    {
+        'name': 'add-tag',
+        'args': ['name', 'tag'],
+        'desc': 'add new tag to a note',
+        'func': 'add_tag'
     },
     {
         'name': 'change',
@@ -31,6 +43,12 @@ def bot_commands():
         'args': ['name', 'old_address', 'new_address'],
         'desc': 'change the saved contact address',
         'func': 'change_contact'
+    },
+    {
+        'name': 'change-note',
+        'args': ['name', 'old_note', 'new_note'],
+        'desc': 'change the saved contact note',
+        'func': 'change_note'
     },
     {
         'name': 'remove',
@@ -55,6 +73,12 @@ def bot_commands():
         'args': ['name', 'address'],
         'desc': 'remove contact address',
         'func': 'remove_contact'
+    },
+    {
+        'name': 'remove',
+        'args': ['name', 'note'],
+        'desc': 'remove contact note',
+        'func': 'delete_note_by_contact'
     },
     {
         'name': 'phone',
@@ -99,6 +123,12 @@ def bot_commands():
         'func': 'show_birthday'
     },
     {
+        'name': 'show-notes',
+        'args': [],
+        'desc': 'show all notes in the phone book',
+        'func': 'show_all_notes'
+    },
+    {
         'name': 'birthdays',
         'args': [],
         'desc': 'show all birthdays from the phone book on the next week',
@@ -135,6 +165,18 @@ def bot_commands():
         'func': 'search_by_phones'
     },
     {
+        'name': 'search-by-note',
+        'args': ['name', 'note'],
+        'desc': 'shows for a note by contact name',
+        'func': 'search_note'
+    },
+    {
+        'name': 'search-by-tag',
+        'args': ['name', 'note', 'tag'],
+        'desc': 'shows note with tag by contact name',
+        'func': 'search_tag'
+    },
+    {
         'name': 'all',
         'args': [],
         'desc': 'print the contacts phone book',
@@ -149,6 +191,11 @@ def bot_commands():
         'name': 'exit',
         'args': [],
         'desc': 'quit from the program'
+    },
+    {
+        'name': 'back',
+        'args': [],
+        'desc': 'return to the previous menu'
     },
     {
         'name': 'help',

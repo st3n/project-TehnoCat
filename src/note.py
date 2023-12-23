@@ -1,100 +1,95 @@
+import os
+
+class RecordDoesNotExistError(Exception):
+    pass
+
+class Contact:
+    def __init__(self, name):
+        self.name = name
+        self.notes = []
+        self.tags = []
+
+    def add_note_with_tag(self, note, tag):
+        self.notes.append(note)
+        self.tags.append(tag)
+
+    def add_tag(self, tag):
+        self.tags.append(tag)
+
+    def change_note(self, new_note):
+        if self.notes:
+            self.notes[-1] = new_note
+
 class Notes:
     def __init__(self, file_name='notes.txt'):
         self.file_name = file_name
+        self.contacts = {}
 
     def add_note(self, contact_name, note, tag=None):
-        with open(self.file_name, 'a') as file:
-            if tag:
-                file.write(f"{contact_name}: {note} #{tag}\n")
-            else:
-                file.write(f"{contact_name}: {note}\n")
+        if contact_name not in self.contacts:
+            raise RecordDoesNotExistError(contact_name)
+
+        if tag:
+            self.contacts[contact_name].add_note_with_tag(note, tag)
+            return f"Note '{note}' with tag '#{tag}' for contact {contact_name} added."
+        else:
+            self.contacts[contact_name].add_note(note)
+            return f"Note '{note}' for contact {contact_name} added."
 
     def add_tag(self, contact_name, tag):
-        try:
-            with open(self.file_name, 'r') as file:
-                lines = file.readlines()
-        except FileNotFoundError:
-            print(f"File '{self.file_name}' not found. File will be created.")
-            lines = []
+        if contact_name not in self.contacts:
+            raise RecordDoesNotExistError(contact_name)
 
-        found_contact = False
-        for i, line in enumerate(lines):
-            if contact_name in line:
-                found_contact = True
-                if f"#{tag}" not in line:
-                    lines[i] = f"{contact_name}: {line.split(':', 1)[1].strip()} #{tag}\n"
-                else:
-                    print(f"Tag #{tag} already exists for contact {contact_name}")
-                break
-
-        if not found_contact:
-            with open(self.file_name, 'a') as file:
-                file.write(f"{contact_name}: #{tag}\n")
-
-        with open(self.file_name, 'w') as file:
-            file.writelines(lines)
+        self.contacts[contact_name].add_tag(tag)
+        return f"Tag '#{tag}' added for contact {contact_name}."
 
     def show_all_notes(self):
-        try:
-            with open(self.file_name, 'r') as file:
-                lines = file.readlines()
-        except FileNotFoundError:
-            print(f"File '{self.file_name}' not found.")
-            return []
+        if not self.contacts:
+            raise KeyError("No contacts found.")
 
         all_notes = []
-        prev_contact = None
-
-        for line in lines:
-            contact, rest = line.split(":", 1)
-            contact = contact.strip()
-            rest = rest.strip()
-            tag = None
-
-            if "#" in rest:
-                tag_start = rest.find("#") + 1
-                tag = rest[tag_start:].strip()
-                rest = rest.replace(f"#{tag}", "").strip()
-
-            if contact == prev_contact:
-                all_notes[-1] = (contact, rest, tag)
-            else:
-                all_notes.append((contact, rest, tag))
-                prev_contact = contact
-
+        for contact in self.contacts.values():
+            for note, tag in zip(contact.notes, contact.tags):
+                all_notes.append((contact.name, note, tag))
         return all_notes
 
-    def search_note_by_tag_or_contact(self, query):
-        query_lower = query.lower()
-        with open(self.file_name, 'r') as file:
-            lines = file.readlines()
-            matching_notes = [line for line in lines if query_lower in line.lower()]
-        return ''.join(matching_notes)
+    def search_by_name(self, args):
+        value = args[0]
+        search_result = []
+        for contact in self.contacts.values():
+            if value.lower() in contact.name.lower():
+                search_result.append(contact)
+        return search_result
 
-    def search_tag(self, tag_query):
-        tag_query = f"#{tag_query}"
-        with open(self.file_name, 'r') as file:
-            lines = file.readlines()
-            matching_notes = [line for line in lines if tag_query in line]
-        return ''.join(matching_notes)
+    def search_tag(self, args):
+        value = args[0]
+        search_result = []
+        for contact in self.contacts.values():
+            if value.lower() in map(str.lower, contact.tags):
+                search_result.append(contact)
+        return search_result
+
+    def search_note(self, args):
+        contact_name = args[0]
+        search_result = []
+        for contact in self.contacts.values():
+            if contact_name.lower() == contact.name.lower():
+                for note, tag in zip(contact.notes, contact.tags):
+                    search_result.append((contact.name, note, tag))
+        return search_result
 
     def change_note(self, contact_name, new_note):
-        with open(self.file_name, 'r') as file:
-            lines = file.readlines()
-        with open(self.file_name, 'w') as file:
-            for line in lines:
-                if contact_name in line:
-                    file.write(f"{contact_name}: {new_note}\n")
-                else:
-                    file.write(line)
+        if contact_name not in self.contacts:
+            raise RecordDoesNotExistError(contact_name)
+
+        self.contacts[contact_name].change_note(new_note)
+        return f"{contact_name}'s note changed to '{new_note}'."
 
     def delete_note_by_contact(self, contact_name):
-        with open(self.file_name, 'r') as file:
-            lines = file.readlines()
-        with open(self.file_name, 'w') as file:
-            for line in lines:
-                if contact_name not in line:
-                    file.write(line)
+        if contact_name in self.contacts:
+            del self.contacts[contact_name]
+        else:
+            raise RecordDoesNotExistError(contact_name)
 
 if __name__ == "__main__":
     notes = Notes()
@@ -119,20 +114,25 @@ if __name__ == "__main__":
             print("All Notes:")
             for contact, rest, tag in all_notes:
                 print(f"{contact}: {rest} {'#' + tag if tag else ''}")
-        
+
         elif user_input == 'search note':
-            search_query = input("Enter the contact name to search for: ")
-            matching_notes = notes.search_note_by_tag_or_contact(search_query)
+            search_query = input("Enter the note to search for: ")
+            matching_notes = notes.search_note([search_query])
             if matching_notes:
-                print("Matching Notes:\n", matching_notes)
+                print("Matching Notes:")
+                for contact_name, note, tag in matching_notes:
+                    print(f"{contact_name}: {note} {'#' + tag if tag else ''}")
             else:
-                print("No notes found with this contact name.")
+                print("No notes found with this note.")
 
         elif user_input == 'search tag':
             tag_query = input("Enter the tag to search for: ")
-            matching_notes = notes.search_tag(tag_query)
+            matching_notes = notes.search_tag([tag_query])
             if matching_notes:
-                print("Matching Notes:\n", matching_notes)
+                print("Matching Notes:")
+                for contact in matching_notes:
+                    for note, tag in zip(contact.notes, contact.tags):
+                        print(f"{contact.name}: {note} {'#' + tag if tag else ''}")
             else:
                 print("No notes found with this tag.")
 
