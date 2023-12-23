@@ -4,7 +4,7 @@ from prompt_toolkit.completion import Completer, Completion
 
 def bot_commands():
     return [
-        {"name": "hello", "args": [], "desc": "greetings message"},
+        {"name": "hello", "args": [], "desc": "greetings message", "func": "hello"},
         {
             "name": "add",
             "args": ["name", "phone"],
@@ -96,7 +96,7 @@ def bot_commands():
             "func": "show_birthday",
         },
         {
-            "name": "birthdays",
+            "name": "birthdays-next-week",
             "args": [],
             "desc": "show all birthdays from the phone book on the next week",
             "func": "show_birthdays_next_week",
@@ -137,8 +137,8 @@ def bot_commands():
             "desc": "print the contacts phone book",
             "func": "show_all",
         },
-        {"name": "close", "args": [], "desc": "quit from the program"},
-        {"name": "exit", "args": [], "desc": "quit from the program"},
+        {"name": "close", "args": [], "desc": "quit from the program", "func": "exit"},
+        {"name": "exit", "args": [], "desc": "quit from the program", "func": "exit"},
         {"name": "help", "args": [], "desc": "print help message", "func": "show_help"},
     ]
 
