@@ -2,7 +2,7 @@ error_msg = "Invalid command format."
 
 
 class BirthdayValueError(Exception):
-    message = f"{error_msg} for birthday. Expected format is DD.MM.YYYY."
+    message = f"Data format is not correct for birthday. Expected format is DD.MM.YYYY."
 
 
 class RecordAlreadyExistsError(Exception):

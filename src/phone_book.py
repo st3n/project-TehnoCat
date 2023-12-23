@@ -131,6 +131,9 @@ def add_email(args, contacts):
 @dump_contacts
 @input_error
 def add_address(args, contacts):
+    if len(args) < 2:
+        raise ValueError
+
     contact = contacts.find(args[0])
     if not contact:
         raise RecordDoesNotExistError
