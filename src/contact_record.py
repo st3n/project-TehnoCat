@@ -1,6 +1,6 @@
 import datetime
-from src.utils.cli_parse_decorator import *
-from src.utils.validator import is_valid_phone, is_valid_email
+from utils.cli_parse_decorator import *
+from utils.validator import is_valid_phone, is_valid_email
 
 
 class Field:
@@ -77,7 +77,7 @@ class Record:
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
         )
-    
+   
     # Checks if the record field includes a value
     # Compitable with arrays and literal constants 
     #
@@ -126,6 +126,7 @@ class Record:
             self.emails.append(Email(email))
         else:
             raise EmailValueError(email)
+        
 
     def edit_email(self, old_email, new_email):
         if Email.is_valid(new_email):

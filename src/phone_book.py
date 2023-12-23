@@ -1,14 +1,15 @@
 from collections import UserDict
 import os
 import pickle
+from rich import print
 
-from src.utils.validator import is_valid_phone
-from src.utils.cli_parse_decorator import *
-from src.utils.dump_decorator import dump_contacts
-from src.phone_book import *
-from src.birthdays import get_birthdays_per_week
-from src.contact_record import Record
-
+from utils.validator import is_valid_phone
+from utils.cli_parse_decorator import *
+from utils.dump_decorator import dump_contacts
+from phone_book import *
+from birthdays import get_birthdays_per_week
+from contact_record import Record
+from consol import *
 
 @dump_contacts
 @input_error
@@ -22,7 +23,7 @@ def add_contact(args, contacts):
         record.add_phone(phone)
         contacts.add_record(record)
 
-    return f"Phone number {phone} for contact {name} added."
+    return f"[bold purple]Phone number[/bold purple] {phone} [bold purple]for contact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n"
 
 
 @dump_contacts
@@ -35,21 +36,21 @@ def remove_contact(args, contacts):
 
     if len(args) == 1:
         contacts.delete(name)
-        return f"Contact {name} removed."
+        return f"[magenta]Contact[/magenta] [bold cyan]{name}[/bold cyan] [magenta]removed[/magenta].\n"
 
     if len(args) == 2:
         if "@" in args[1]:
             contacts[name].remove_email(args[1])
-            return f"{name}'s email '{args[1]}' removed."
+            return f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args[1]}' [magenta]removed[/magenta].\n"
 
         if args[1].isdigit():
             contacts[name].remove_phone(args[1])
-            return f"{name}'s phone '{args[1]}' removed."
+            return f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args[1]}' [magenta]removed[/magenta].\n"
     else:
         full_address = " ".join(args[1:])
         contacts[name].remove_address(full_address)
-        return f"{name}'s address '{full_address}' removed."
-
+        return f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{full_address}' [magenta]removed[/magenta].\n"
+        
 
 @dump_contacts
 @input_error
@@ -62,11 +63,11 @@ def change_contact(args, contacts):
     if len(args) == 3:
         if "@" in args[1] and "@" in args[2]:
             contacts[name].edit_email(args[1], args[2])
-            return f"{name}'s email '{args[1]}' changed to '{args[2]}'."
+            return f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args[1]}' changed to '{args[2]}'.\n"
 
         if args[1].isdigit() and args[2].isdigit():
             contacts[name].edit_phone(args[1], args[2])
-            return f"{name}'s phone '{args[1]}' changed to '{args[2]}'."
+            return f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args[1]}'[bold purple] changed to[/bold purple] '{args[2]}'.\n"
 
     addresses = [
         x.strip() for x in " ".join(args[1:]).split(sep="|") if x != "" and x != " "
@@ -75,7 +76,7 @@ def change_contact(args, contacts):
         raise ValueError
 
     contacts[name].edit_address(addresses[0], addresses[1])
-    return f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'."
+    return f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{addresses[0]}' [bold purple]changed to [/bold purple]'{addresses[1]}'.\n"
 
 
 @input_error
@@ -92,15 +93,14 @@ def show_phone(args, contacts):
 
 
 @input_error
-def show_all(args, contacts):
+def show_all(args, contacts, console):
     if args:
-        raise ValueError
+        raise ValueError 
 
-    if not contacts:
-        raise KeyError
-
-    prefix = "The phone book:\n"
-    return prefix + "\n".join(map(lambda x: contacts.find(x).__str__(), contacts))
+    if not contacts.data:
+        raise KeyError 
+    else:
+        display_table_all(contacts, console)
 
 
 @dump_contacts
@@ -113,7 +113,7 @@ def add_birthday(args, contacts):
 
     contact.add_birthday(date)
 
-    return "Birthday added."
+    return "[bold purple]Birthday added[/bold purple].\n"
 
 
 @dump_contacts
@@ -125,7 +125,7 @@ def add_email(args, contacts):
         raise RecordDoesNotExistError
 
     contact.add_email(email)
-    return "Email added."
+    return "[bold purple]Email added[/bold purple].\n"
 
 
 @dump_contacts
@@ -136,7 +136,7 @@ def add_address(args, contacts):
         raise RecordDoesNotExistError
 
     contact.add_address(" ".join(args[1:]))
-    return "Address added."
+    return "[bold purple]Address added[/bold purple].\n"
 
 
 @input_error

@@ -1,7 +1,8 @@
 import readline
-from src.phone_book import *
-from src.utils.cli_parse_decorator import *
+from phone_book import *
+from utils.cli_parse_decorator import *
 
+console = Console()
 
 @input_error
 def parse_input(user_input):
@@ -11,39 +12,43 @@ def parse_input(user_input):
 
 
 def show_help():
-    print("possible commands:")
-    print("'hello' - greetings message")
-    print("'add [name] [phone]' - add new contact in the phone book")
-    print("'change [name] [old_phone] [new_phone]' - change the saved contact phone")
-    print("'change [name] [old_email] [new_email]' - change the saved contact email")
-    print(
-        "'change [name] [old_address] | [new_address]' - change the saved contact address"
-    )
-    print("remove [name]' - remove contact")
-    print("remove [name] [phone]' - remove contact phone")
-    print("remove [name] [email]' - remove contact email")
-    print("remove [name] [address]' - remove contact address")
-    print("'phone [name]' - show the phone of the user with entered name")
-    print(
-        "'add-birthday [name] [date]' - add birthday for contact in format 'DD.MM.YYYY'"
-    )
-    print("add-email [name] [email] - add email for contact")
-    print("add-address [name] [address] - add address for contact")
-    print("show-email [name]")
-    print("show-address [name]")
-    print("show-birthday [name]")
-    print("'birthdays' - show all birthdays from the phone book on the next week")
-    print("'all' - print the contacnts phone book")
-    print("'close' or 'exit' - quit from the program")
-    print("'help' - print help message")
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Command", style="cyan", width=15)
+    table.add_column("Description", style="yellow", width=110)
 
+    commands = [
+        ("hello", "Greetings message"),
+        ("add", "Add new contact in the phone book. After the command, write your name and phone number"),
+        ("change", "Change the saved contact phone. After the command, write your name, old phone number and new phone number"),
+        ("change", "Change the saved contact email. After the command, write your name, old email and new email"),
+        ("change", "Change the saved contact address. After the command, write your name, old adress and new adress"),
+        ("remove", "Remove contact. After the command, write the name you want to delete"),
+        ("remove", "Remove phone. After the command, write the name and contact phone number you want to delete"),
+        ("remove", "Remove email. After the command, write the name and contact email you want to delete"),
+        ("remove", "Remove adress. After the command, write the name and contact adress you want to delete"),
+        ("phone", "Show the phone of the user with entered name. After the command, write your name"),
+        ("add-birthday", "Add birthday for contact. After the command, write your name and birthday in format 'DD.MM.YYYY'"),
+        ("add-email", "Add email for contact. After the command, write your name and email for contact"),
+        ("add-address", "Add address for contact. After the command, write your name and address for contact"),
+        ("show-birthday", "Show birthday for contact. After the command, write your name"),
+        ("show-email", "Show email for contact. After the command, write your name"),
+        ("show-address", "Show address for contact. After the command, write your name"),
+        ("birthdays", "Show all birthdays from the phone book on the next week"),
+        ("all", "Print the contacts phone book"),
+        ("close or exit", "Quit from the program"),
+        ("help", "Print help message")
+    ]
+
+    for command, description in commands:
+        table.add_row(command, description)
+
+    console.print(table)
 
 command_dict = {
     "add": add_contact,
     "change": change_contact,
     "remove": remove_contact,
     "phone": show_phone,
-    "all": show_all,
     "add-birthday": add_birthday,
     "add-email": add_email,
     "add-address": add_address,
@@ -58,15 +63,16 @@ command_dict = {
 }
 
 
+
 def exit(history_file):
     readline.write_history_file(history_file)
-    print("Good bye!")
+    print("[bold magenta]Goodbye![/bold magenta]\n\U0001FAE1")
 
 
 def main():
     command_history = "../.command_history"
     contacts = AddressBook()
-    print("Welcome to the assistant bot!")
+    print("[bold blue]Welcome to the assistant bot![/bold blue]\n\U0001F929  \U0001F929  \U0001F929\n")
 
     try:
         readline.read_history_file(command_history)
@@ -86,14 +92,16 @@ def main():
             exit(command_history)
             break
         elif command == "hello":
-            print("How can I help you?")
+            print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
         elif command in command_dict:
             print(command_dict[command](args, contacts))
+        elif command == "all":
+            show_all(args, contacts, console)
         elif command == "help":
             show_help()
         else:
-            print("Invalid command.")
-            show_help()
+            print("[bold yellow]Invalid command.[/bold yellow]\n\U0001F914\n")
+          #  show_help()
 
 
 if __name__ == "__main__":
