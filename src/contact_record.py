@@ -73,6 +73,7 @@ class Record:
     def __str__(self):
         return (
             f"Contact name: {self.name.value}\n"
+            f"birthday: {self.birthday if self.birthday else ''}\n"
             f"phones: {', '.join(p.value for p in self.phones)}\n"
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"

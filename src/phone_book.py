@@ -1,6 +1,7 @@
 from collections import UserDict
 import os
 import pickle
+import datetime
 
 from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
@@ -196,9 +197,10 @@ def show_birthdays_in_days(args, contacts):
     )
 
 def search(value, field_name, contacts):
-    splitted_value = value.split(' ')
+    value = value.split(' ') if type(value) is str else [value]
+
     search_result = []
-    for v in splitted_value:
+    for v in value:
         search_result += contacts.search_by(field_name, v)
 
     res = f"{len(search_result)} records found\n\n"
@@ -209,7 +211,7 @@ def search_by_name(args, contacts):
     value = args[0]
     return search(value, 'name', contacts)
 def search_by_birthday(args, contacts):
-    value = args[0]
+    value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
     return search(value, 'birthday', contacts)
 def search_by_emails(args, contacts):
     value = args[0]
