@@ -78,9 +78,9 @@ class Record:
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
         )
-    
+
     # Checks if the record field includes a value
-    # Compitable with arrays and literal constants 
+    # Compitable with arrays and literal constants
     #
     # e.g. record.field_has_value('emails', 'test@test.com')
     #

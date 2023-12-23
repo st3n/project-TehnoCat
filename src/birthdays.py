@@ -42,14 +42,18 @@ def get_birthdays_per_week(users):
     )
 
 
-
-def get_birthdays_in_days(users, days_from_now = 0):
+def get_birthdays_in_days(users, days_from_now=0):
     date = datetime.today().date() + timedelta(days=days_from_now)
     birthday_day_of_week = date.strftime("%A")
     birthday_str = date.strftime("%d.%m.%Y")
 
-    birthday_users = list(filter(lambda user: (user['birthday'].date().replace(year=date.year) == date), users))
-    user_names = ', '.join(map(lambda user: user['name'], birthday_users))
+    birthday_users = list(
+        filter(
+            lambda user: (user["birthday"].date().replace(year=date.year) == date),
+            users,
+        )
+    )
+    user_names = ", ".join(map(lambda user: user["name"], birthday_users))
     return f"{birthday_day_of_week} ({birthday_str}): {user_names}"
 
 
