@@ -63,7 +63,7 @@ command_dict = {
     'search-by-birthday': search_by_birthday,
     'search-by-emails': search_by_emails,
     'search-by-phones': search_by_phones}
-print("possible commands:")
+# print("possible commands:")
 
 
 for command_data in bot_commands():
@@ -82,7 +82,6 @@ def main():
     contacts = AddressBook()
     session = PromptSession(completer=CommandCompleter())
     print("[bold blue]Welcome to the assistant bot![/bold blue]\n\U0001F929  \U0001F929  \U0001F929\n")
-
 
     try:
         readline.read_history_file(command_history)
@@ -103,12 +102,14 @@ def main():
             break
         elif command == "hello":
              print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
-        elif command_exists(command):
-            func_name = find_command_by_name(command)['func']
-            func = globals()[func_name]
-            print(func(args, contacts))
+   #     elif command_exists(command):
+   #        func_name = find_command_by_name(command)['func']
+    #       func = globals()[func_name]
+      #     print(func(args, contacts))
         elif command == "all":
             show_all(args, contacts, console)
+        elif command== "birthdays":
+            get_birthdays_per_week(args)    
         elif command == "help":
             show_help()
         else:

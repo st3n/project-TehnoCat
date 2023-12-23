@@ -128,15 +128,36 @@ def add_email(args, contacts):
     return "[bold purple]Email added[/bold purple].\n"
 
 
+
+#@input_error
+#def add_address(args, contacts):
+ #   contact = contacts.find(args[0])
+ #   if not contact:
+  #      raise RecordDoesNotExistError
+#
+ #   contact.add_address(" ".join(args[1:]))
+ #   return "[bold purple]Address added[/bold purple].\n"
+
+
 @dump_contacts
 @input_error
 def add_address(args, contacts):
-    contact = contacts.find(args[0])
-    if not contact:
+    if len(args) < 2:
+        raise ValueError
+
+    name = args[0]
+    address = " ".join(args[1:])
+    
+    contact = contacts.find(name)
+    
+    if contact:
+        contact.add_address(address)
+        return f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{address}' [magenta]added[/magenta].\n"
+    else:
         raise RecordDoesNotExistError
 
-    contact.add_address(" ".join(args[1:]))
-    return "[bold purple]Address added[/bold purple].\n"
+
+
 
 
 @input_error

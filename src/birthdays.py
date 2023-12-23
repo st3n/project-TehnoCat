@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
+from tabulate import tabulate
+from rich.console import Console
+from rich.table import Table
 
-
+# хочу вывести в красивую таблицу
 def get_birthdays_per_week(users):
     # 1. data preparation
     birthdays_per_day = defaultdict(list)
@@ -23,7 +26,7 @@ def get_birthdays_per_week(users):
         delta_days = (birthday_this_year - today).days
 
         # evaluation for the next week
-        if delta_days < 7:
+        if delta_days >= 0 and delta_days < 7:
             today_day_of_week = today.strftime("%A")
             birthday_day_of_week = (today + timedelta(days=delta_days)).strftime("%A")
 
@@ -36,22 +39,70 @@ def get_birthdays_per_week(users):
             if birthday_day_of_week in ["Saturday", "Sunday"]:
                 birthday_day_of_week = "Monday"
             birthdays_per_day[birthday_day_of_week].append(name)
+   
+    table = Table(title="Birthdays", show_header=True, header_style="bold magenta")
+    table.add_column("Day", style="cyan", width=10)
+    table.add_column("Birthdays", style="yellow")
 
-    return "\n".join(
-        [f"{day}: {', '.join(names)}" for day, names in birthdays_per_day.items()]
-    )
+    for day, names in birthdays_per_day.items():
+        table.add_row(day, ', '.join(names))
+
+    console = Console()
+    console.print(table)
+   
 
 
 
+ 
+   
+    #table_data = []
+    #for day, names in birthdays_per_day.items():
+    #    table_data.append([day, ', '.join(names)])
 
-def get_birthdays_in_days(users, days_from_now = 0):
+   # return tabulate(table_data, headers=["Day", "Birthdays"])
+    ##return "\n".join(
+    #    [f"{day}: {', '.join(names)}" for day, names in birthdays_per_day.items()]
+    
+
+    def get_birthdays_in_days(users, days_from_now = 0):
+        date = datetime.today().date() + timedelta(days=days_from_now)
+        birthday_day_of_week = date.strftime("%A")
+        birthday_str = date.strftime("%d.%m.%Y")
+
+        birthday_users = list(filter(lambda user: (user['birthday'].date().replace(year=date.year) == date), users))
+        user_names = ', '.join(map(lambda user: user['name'], birthday_users))
+  #  return f"{birthday_day_of_week} ({birthday_str}): {user_names}"
+
+
+    
+
+def get_birthdays_in_days(users, days_from_now=0):
     date = datetime.today().date() + timedelta(days=days_from_now)
     birthday_day_of_week = date.strftime("%A")
     birthday_str = date.strftime("%d.%m.%Y")
 
     birthday_users = list(filter(lambda user: (user['birthday'].date().replace(year=date.year) == date), users))
-    user_names = ', '.join(map(lambda user: user['name'], birthday_users))
-    return f"{birthday_day_of_week} ({birthday_str}): {user_names}"
+
+    table = Table(title="Birthdays", show_header=True, header_style="bold magenta")
+    table.add_column("Birthday Celebrant", style="cyan")
+
+    for user in birthday_users:
+        table.add_row(user['name'])
+
+    console = Console()
+    console.print(table)
+    
+
+
+
+  #  user_names = ', '.join(map(lambda user: user['name'], birthday_users))
+
+   # table_data = []
+   # for user in birthday_users:
+    #    table_data.append([user['name']])
+
+   # return tabulate(table_data, headers=["Birthday Celebrant"])
+    #return f"{birthday_day_of_week} ({birthday_str}): {user_names}"
 
 
 # users = [

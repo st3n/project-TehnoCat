@@ -50,21 +50,20 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
+
         except ValueError:
             return {
-                "add_contact": f"{error_msg}\n[bold green]Use 'add'. After the command, write your name and phone number.[/bold green]\n",
-                "change_contact": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
-                "remove_contact": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
-                "show_phone": f"{error_msg}\n[bold green]Use 'phone' After the command, write your name[/bold green].\n",
-                "show_all": f"{error_msg}\n[bold green]Use only 'all' without arguments.[/bold green]\n",
-                "parse_input": f"{error_msg}\n[bold green]Use only 'help' for commands list[/bold green]\n",
-                "add_birthday": f"{error_msg}\n[bold green]Use 'add-birthday' After the command, write your name and birthday in format 'DD.MM.YYYY'.[/bold green]\n",
-                "add_email": f"{error_msg} \n[bold green]Use 'add-email'. After the command, write your name and email for contact.[/bold green]\n",
-                "add_address": f"{error_msg}\n[bold green] Use 'add-address'. After the command, write your name and address for contact.[/bold green]\n",
-                "show_email": f"{error_msg} \n[bold green]Use 'show-email. After the command, write your name.[/bold green]\n",
-                "show_address": f"{error_msg}\n[bold green] Use 'show-address. After the command, write your name.[/bold green]\n",
-                "show_birthday": f"{error_msg}\n[bold green]Use 'show-birthday After the command, write your name.[/bold green]\n",
-
+                "add_contact": f"{error_msg} Use 'add [name] [phone number]'.",
+                "change_contact": f"{error_msg} Use 'change [name] [old [phone,email,address]] [new [phone,email,address]]'.",
+                "remove_contact": f"{error_msg} Use 'remove [name]'.",
+                "show_phone": f"{error_msg} Use 'phone [name]'.",
+                "show_all": f"{error_msg} Use 'all' without arguments.",
+                "parse_input": f"{error_msg} Use 'help' for commands list",
+                "add_birthday": f"{error_msg} Use 'add-birthday [name] [birtday]' birtday in format DD.MM.YYYY.",
+                "add_email": f"{error_msg} Use 'add-eamil [name] [email]'.",
+                "add_address": f"{error_msg} Use 'add-address [name] [address]'.",
+                "show_email": f"{error_msg} Use 'show-email [name]'.",
+                "show_address": f"{error_msg} Use 'show-address [name]'.",
             }[func.__name__]
         except (
             EmailValueError,
@@ -79,6 +78,8 @@ def input_error(func):
             return e.message
         except KeyError:
             if func.__name__ == "show_all":
-                return "[/bold yellow]The contacts list is empty.[/bold yellow]\n"
+                return "The contacts list is empty."
 
     return inner
+
+
