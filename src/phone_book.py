@@ -50,7 +50,7 @@ def remove_contact(args, contacts):
         full_address = " ".join(args[1:])
         contacts[name].remove_address(full_address)
         return f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{full_address}' [magenta]removed[/magenta].\n"
-        
+
 
 @dump_contacts
 @input_error
@@ -95,10 +95,10 @@ def show_phone(args, contacts):
 @input_error
 def show_all(args, contacts):
     if args:
-        raise ValueError 
+        raise ValueError
 
     if not contacts.data:
-        raise KeyError 
+        raise KeyError
     else:
         display_table_all(contacts)
 
@@ -178,25 +178,33 @@ def show_address(args, contacts):
 
 @input_error
 def show_birthdays_next_week(_, contacts):
-    contacts_with_birthdays = list(filter(lambda name: contacts.find(name).birthday is not None, contacts))
+    contacts_with_birthdays = list(
+        filter(lambda name: contacts.find(name).birthday is not None, contacts)
+    )
     return get_birthdays_per_week(
         map(
-            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value}, contacts_with_birthdays
+            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value},
+            contacts_with_birthdays,
         )
     )
 
+
 def show_birthdays_in_days(args, contacts):
     days_from_now = args[0]
-    contacts_with_birthdays = list(filter(lambda name: contacts.find(name).birthday is not None, contacts))
+    contacts_with_birthdays = list(
+        filter(lambda name: contacts.find(name).birthday is not None, contacts)
+    )
     return get_birthdays_in_days(
         map(
-            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value}, contacts_with_birthdays
+            lambda name: {"name": name, "birthday": contacts.find(name).birthday.value},
+            contacts_with_birthdays,
         ),
-        int(days_from_now)
+        int(days_from_now),
     )
 
+
 def search(value, field_name, contacts):
-    splitted_value = value.split(' ')
+    splitted_value = value.split(" ")
     search_result = []
     for v in splitted_value:
         search_result += contacts.search_by(field_name, v)
@@ -205,18 +213,26 @@ def search(value, field_name, contacts):
     res += "\n".join(list(map(lambda sr: str(sr), search_result)))
     return res
 
+
 def search_by_name(args, contacts):
     value = args[0]
-    return search(value, 'name', contacts)
+    return search(value, "name", contacts)
+
+
 def search_by_birthday(args, contacts):
     value = args[0]
-    return search(value, 'birthday', contacts)
+    return search(value, "birthday", contacts)
+
+
 def search_by_emails(args, contacts):
     value = args[0]
-    return search(value, 'emails', contacts)
+    return search(value, "emails", contacts)
+
+
 def search_by_phones(args, contacts):
     value = args[0]
-    return search(value, 'phones', contacts)
+    return search(value, "phones", contacts)
+
 
 class AddressBook(UserDict):
     def __init__(self, load_from_file=True):
@@ -243,11 +259,12 @@ class AddressBook(UserDict):
             del self.data[name]
         else:
             raise RecordDoesNotExistError
-        
+
     def search_by(self, field_name, value):
         records = list(self.data.values())
-        return list(filter(lambda record: record.field_has_value(field_name, value), records))
-
+        return list(
+            filter(lambda record: record.field_has_value(field_name, value), records)
+        )
 
     def dump(self):
         """
