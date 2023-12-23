@@ -28,8 +28,20 @@ class ConsolePrinter:
             email_str = str(record.emails[0].value) if record.emails else "None"
             birthday_str = str(record.birthday) if record.birthday else "None"
             notes_str = str(record.notes) if record.notes else "None"
-            tags_str = str("\n".join([tag.value for tag in record.notes_tags])) if record.notes_tags else "None"
-            table.add_row(name, phones_str, address_str, email_str, birthday_str, notes_str, tags_str)
+            tags_str = (
+                str("\n".join([tag.value for tag in record.notes_tags]))
+                if record.notes_tags
+                else "None"
+            )
+            table.add_row(
+                name,
+                phones_str,
+                address_str,
+                email_str,
+                birthday_str,
+                notes_str,
+                tags_str,
+            )
 
         self.console.print(table)
 

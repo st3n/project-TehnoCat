@@ -3,185 +3,174 @@ from prompt_toolkit.completion import Completer, Completion
 
 
 def bot_commands():
-  return [
-    {
-        'name': 'hello',
-        'args': [],
-        'desc': 'greetings message',
-        'func': 'hello',
-    },
-    {
-        'name': 'add',
-        'args': ['name', 'phone'],
-        'desc': 'add new contact in the phone book',
-        'func': 'add_contact'
-    },
-    {
-        'name': 'change',
-        'args': ['name', 'old_phone', 'new_phone'],
-        'desc': 'change the saved contact phone',
-        'func': 'change_contact'
-    },
-    {
-        'name': 'change',
-        'args': ['name', 'old_email', 'new_email'],
-        'desc': 'change the saved contact email',
-        'func': 'change_contact'
-    },
-    {
-        'name': 'change',
-        'args': ['name', 'old_address', 'new_address'],
-        'desc': 'change the saved contact address',
-        'func': 'change_contact'
-    },
-    {
-        'name': 'remove',
-        'args': ['name'],
-        'desc': 'remove contact',
-        'func': 'remove_contact'
-    },
-    {
-        'name': 'remove',
-        'args': ['name', 'phone'],
-        'desc': 'remove contact phone',
-        'func': 'remove_contact'
-    },
-    {
-        'name': 'remove',
-        'args': ['name', 'email'],
-        'desc': 'remove contact email',
-        'func': 'remove_contact'
-    },
-    {
-        'name': 'remove',
-        'args': ['name', 'address'],
-        'desc': 'remove contact address',
-        'func': 'remove_contact'
-    },
-    {
-        'name': 'phone',
-        'args': ['name'],
-        'desc': 'show the phone of the user with entered name',
-        'func': 'show_phone'
-    },
-    {
-        'name': 'add-birthday',
-        'args': ['name', 'date'],
-        'desc': "add birthday for name 'name' in format 'DD.MM.YYYY'",
-        'func': 'add_birthday'
-    },
-    {
-        'name': 'add-email',
-        'args': ['name', 'email'],
-        'desc': "add email for contact",
-        'func': 'add_email'
-    },
-    {
-        'name': 'add-address',
-        'args': ['name', 'address'],
-        'desc': "add address for contact",
-        'func': 'add_address'
-    },
-    {
-        'name': 'show-email',
-        'args': ['name'],
-        'desc': "show email for name 'name'",
-        'func': 'show_email'
-    },
-    {
-        'name': 'show-address',
-        'args': ['name'],
-        'desc': "show email for name 'name'",
-        'func': 'show_address'
-    },
-    {
-        'name': 'show-birthday',
-        'args': ['name'],
-        'desc': "show birthday for name 'name'",
-        'func': 'show_birthday'
-    },
-    {
-        'name': 'birthdays',
-        'args': [],
-        'desc': 'show all birthdays from the phone book on the next week',
-        'func': 'show_birthdays_next_week'
-    },
-    {
-        'name': 'birthdays-in-days',
-        'args': ['days'],
-        'desc': 'show all birthdays in a particular amount of days',
-        'func': 'show_birthdays_in_days'
-    },
-    {
-        'name': 'search-by-name',
-        'args': ['name'],
-        'desc': 'shows all contacts with this name',
-        'func': 'search_by_name'
-    },
-    {
-        'name': 'search-by-birthday',
-        'args': ['date'],
-        'desc': 'shows all contacts with the specific birthday',
-        'func': 'search_by_birthday'
-    },
-    {
-        'name': 'search-by-emails',
-        'args': ['email1', 'email2'],
-        'desc': 'shows all contacts with the specific emails',
-        'func': 'search_by_emails'
-    },
-    {
-        'name': 'search-by-phones',
-        'args': ['phone1', 'phone2', 'phoneN'],
-        'desc': 'shows all contacts with the specific phone numbers',
-        'func': 'search_by_phones'
-    },
-    {
-        'name': 'all',
-        'args': [],
-        'desc': 'print the contacts phone book',
-        'func': 'show_all'
-    },
-    {
-        'name': 'close',
-        'args': [],
-        'desc': 'quit from the program'
-    },
-    {
-        'name': 'exit',
-        'args': [],
-        'desc': 'quit from the program'
-    },
-    {
-        'name': 'help',
-        'args': [],
-        'desc': 'print help message'
-    },
-      {
-          'name': 'add-note',
-          'args': ['name', 'note'],
-          'desc': 'add note',
-          'func': 'add_note'
-      },
-      {
-          'name': 'edit-note',
-          'args': ['name', 'note'],
-          'desc': 'edit note',
-          'func': 'edit_note'
-      },
-      {
-          'name': 'search-by-note',
-          'args': ['name', 'note'],
-          'desc': 'search_by_note',
-          'func': 'search_by_note'
-      },
-      {
-          'name': 'search-by-tag',
-          'args': ['name', 'tag'],
-          'desc': 'search_by_tag',
-          'func': 'search_by_tag'
-      }
-  ]
+    return [
+        {
+            "name": "hello",
+            "args": [],
+            "desc": "greetings message",
+            "func": "hello",
+        },
+        {
+            "name": "add",
+            "args": ["name", "phone"],
+            "desc": "add new contact in the phone book",
+            "func": "add_contact",
+        },
+        {
+            "name": "change",
+            "args": ["name", "old_phone", "new_phone"],
+            "desc": "change the saved contact phone",
+            "func": "change_contact",
+        },
+        {
+            "name": "change",
+            "args": ["name", "old_email", "new_email"],
+            "desc": "change the saved contact email",
+            "func": "change_contact",
+        },
+        {
+            "name": "change",
+            "args": ["name", "old_address", "new_address"],
+            "desc": "change the saved contact address",
+            "func": "change_contact",
+        },
+        {
+            "name": "remove",
+            "args": ["name"],
+            "desc": "remove contact",
+            "func": "remove_contact",
+        },
+        {
+            "name": "remove",
+            "args": ["name", "phone"],
+            "desc": "remove contact phone",
+            "func": "remove_contact",
+        },
+        {
+            "name": "remove",
+            "args": ["name", "email"],
+            "desc": "remove contact email",
+            "func": "remove_contact",
+        },
+        {
+            "name": "remove",
+            "args": ["name", "address"],
+            "desc": "remove contact address",
+            "func": "remove_contact",
+        },
+        {
+            "name": "phone",
+            "args": ["name"],
+            "desc": "show the phone of the user with entered name",
+            "func": "show_phone",
+        },
+        {
+            "name": "add-birthday",
+            "args": ["name", "date"],
+            "desc": "add birthday for name 'name' in format 'DD.MM.YYYY'",
+            "func": "add_birthday",
+        },
+        {
+            "name": "add-email",
+            "args": ["name", "email"],
+            "desc": "add email for contact",
+            "func": "add_email",
+        },
+        {
+            "name": "add-address",
+            "args": ["name", "address"],
+            "desc": "add address for contact",
+            "func": "add_address",
+        },
+        {
+            "name": "show-email",
+            "args": ["name"],
+            "desc": "show email for name 'name'",
+            "func": "show_email",
+        },
+        {
+            "name": "show-address",
+            "args": ["name"],
+            "desc": "show email for name 'name'",
+            "func": "show_address",
+        },
+        {
+            "name": "show-birthday",
+            "args": ["name"],
+            "desc": "show birthday for name 'name'",
+            "func": "show_birthday",
+        },
+        {
+            "name": "birthdays",
+            "args": [],
+            "desc": "show all birthdays from the phone book on the next week",
+            "func": "show_birthdays_next_week",
+        },
+        {
+            "name": "birthdays-in-days",
+            "args": ["days"],
+            "desc": "show all birthdays in a particular amount of days",
+            "func": "show_birthdays_in_days",
+        },
+        {
+            "name": "search-by-name",
+            "args": ["name"],
+            "desc": "shows all contacts with this name",
+            "func": "search_by_name",
+        },
+        {
+            "name": "search-by-birthday",
+            "args": ["date"],
+            "desc": "shows all contacts with the specific birthday",
+            "func": "search_by_birthday",
+        },
+        {
+            "name": "search-by-emails",
+            "args": ["email1", "email2"],
+            "desc": "shows all contacts with the specific emails",
+            "func": "search_by_emails",
+        },
+        {
+            "name": "search-by-phones",
+            "args": ["phone1", "phone2", "phoneN"],
+            "desc": "shows all contacts with the specific phone numbers",
+            "func": "search_by_phones",
+        },
+        {
+            "name": "all",
+            "args": [],
+            "desc": "print the contacts phone book",
+            "func": "show_all",
+        },
+        {"name": "close", "args": [], "desc": "quit from the program"},
+        {"name": "exit", "args": [], "desc": "quit from the program"},
+        {"name": "help", "args": [], "desc": "print help message"},
+        {
+            "name": "add-note",
+            "args": ["name", "note"],
+            "desc": "add note",
+            "func": "add_note",
+        },
+        {
+            "name": "edit-note",
+            "args": ["name", "note"],
+            "desc": "edit note",
+            "func": "edit_note",
+        },
+        {
+            "name": "search-by-note",
+            "args": ["name", "note"],
+            "desc": "search_by_note",
+            "func": "search_by_note",
+        },
+        {
+            "name": "search-by-tag",
+            "args": ["name", "tag"],
+            "desc": "search_by_tag",
+            "func": "search_by_tag",
+        },
+    ]
+
 
 def command_exists(command_name):
     return any(

@@ -320,8 +320,8 @@ class PhoneBook(UserDict):
 
     def search_by_note(self, args):
         value = args[0]
-        return self.search(value, 'notes')
+        return self.search(value, "notes")
 
     def search_by_tag(self, args):
         value = args[0]
-        return self.search(value, 'notes_tags')
+        return self.search(value, "notes_tags")
