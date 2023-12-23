@@ -62,15 +62,14 @@ command_dict = {
     'search-by-name': search_by_name,
     'search-by-birthday': search_by_birthday,
     'search-by-emails': search_by_emails,
-    'search-by-phones': search_by_phones
-}
-    print("possible commands:")
+    'search-by-phones': search_by_phones}
+print("possible commands:")
 
 
-    for command_data in bot_commands():
-        name = f"{command_data['name']}"
-        args = f" [{', '.join(command_data['args'])}]" if command_data['args'] else ''
-        print(f"'{name}{args}' - {command_data['desc']}")
+for command_data in bot_commands():
+    name = f"{command_data['name']}"
+    args = f" [{', '.join(command_data['args'])}]" if command_data['args'] else ''
+    print(f"'{name}{args}' - {command_data['desc']}")
 
 
 def exit(history_file):
