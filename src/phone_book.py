@@ -126,7 +126,9 @@ class PhoneBook(UserDict):
             raise ValueError
 
         self.data[name].edit_address(addresses[0], addresses[1])
-        print(f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'.")
+        res = f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'."
+        print(res)
+        return res
 
     @input_error
     def show_phone(self, args):
