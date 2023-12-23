@@ -2,10 +2,11 @@ from collections import UserDict
 import os
 import pickle
 from rich import print
+import datetime
+
 from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
 from src.utils.dump_decorator import dump_contacts
-from src.phone_book import *
 from src.contact_record import Record
 from src.consol import display_table_all
 from src.birthdays import get_birthdays_per_week, get_birthdays_in_days
@@ -131,6 +132,9 @@ def add_email(args, contacts):
 @dump_contacts
 @input_error
 def add_address(args, contacts):
+    if len(args) < 2:
+        raise ValueError
+
     contact = contacts.find(args[0])
     if not contact:
         raise RecordDoesNotExistError
@@ -204,9 +208,10 @@ def show_birthdays_in_days(args, contacts):
 
 
 def search(value, field_name, contacts):
-    splitted_value = value.split(" ")
+    value = value.split(' ') if type(value) is str else [value]
     search_result = []
-    for v in splitted_value:
+    
+    for v in value:
         search_result += contacts.search_by(field_name, v)
 
     res = f"{len(search_result)} records found\n\n"
@@ -220,9 +225,8 @@ def search_by_name(args, contacts):
 
 
 def search_by_birthday(args, contacts):
-    value = args[0]
-    return search(value, "birthday", contacts)
-
+    value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
+    return search(value, 'birthday', contacts)
 
 def search_by_emails(args, contacts):
     value = args[0]

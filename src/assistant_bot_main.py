@@ -1,24 +1,18 @@
-import sys
-
-if sys.platform in ["macOSX", "darwin"]:
-    import gnureadline as readline
-else:
-    import readline
-
-
 from prompt_toolkit import PromptSession
 from rich.console import Console
 from rich.table import Table
 
-from phone_book import *
-from utils.cli_parse_decorator import *
-from command import (
+from src.phone_book import *
+from src.utils.cli_parse_decorator import *
+from src.command import (
     bot_commands,
     find_closest_command,
     CommandCompleter,
     command_exists,
     find_command_by_name,
 )
+
+from src.utils.console_history import HistoryConsole
 
 
 @input_error
@@ -45,15 +39,13 @@ def show_help(_, __):
         table.add_row(name, args, desc)
 
     return table
+ 
 
-
-def exit(history_file):
-    readline.write_history_file(history_file)
+def exit():
     print("[bold magenta]Goodbye![/bold magenta]\n\U0001FAE1")
 
 
 def main():
-    command_history = "../.command_history"
     console = Console()
     contacts = AddressBook()
     session = PromptSession(completer=CommandCompleter())
@@ -61,25 +53,26 @@ def main():
         "[bold blue]Welcome to the assistant bot![/bold blue]\n\U0001F929  \U0001F929  \U0001F929\n"
     )
 
-    try:
-        readline.read_history_file(command_history)
-    except FileNotFoundError:
-        pass
+    console_history = HistoryConsole()
 
     while True:
         try:
             user_input = session.prompt("Enter a command: ").strip()
-        except KeyboardInterrupt:
-            exit(command_history)
+
+        except (KeyboardInterrupt, EOFError):
+            exit()
             break
 
+        console_history.add_history(user_input)
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
-            exit(command_history)
+            exit()
             break
         elif command == "hello":
             print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
+        elif command == "help":
+            show_help()
         elif command_exists(command):
             func_name = find_command_by_name(command)["func"]
             func = globals()[func_name]

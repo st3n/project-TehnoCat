@@ -2,8 +2,7 @@ error_msg = "[bold yellow]Invalid command format.[/bold yellow] \U0001F914"
 
 
 class BirthdayValueError(Exception):
-    message = "[bold yellow]Invalid command format for birthday[/bold yellow] \U0001F914.\n[bold green]Expected format is DD.MM.YYYY.[/bold green]\n"
-
+    message = "\U0001F914[bold green]Data format is not correct for birthday. Expected format is DD.MM.YYYY.[/bold green]\n"
 
 class RecordAlreadyExistsError(Exception):
     message = "[bold yellow]Record already exists[/bold yellow] \U0001F917.\n [bold green]Use change_contact [name] instead[/bold green]\n"
