@@ -1,6 +1,9 @@
 import readline
+
 from phone_book import *
 from utils.cli_parse_decorator import *
+from command import bot_commands, find_closest_command, CommandCompleter, command_exists, find_command_by_name
+from prompt_toolkit import PromptSession
 
 console = Console()
 
@@ -10,8 +13,8 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
-
 def show_help():
+
     table = Table(show_header=True, header_style="bold magenta")
     table.add_column("Command", style="cyan", width=15)
     table.add_column("Description", style="yellow", width=110)
@@ -61,7 +64,13 @@ command_dict = {
     'search-by-emails': search_by_emails,
     'search-by-phones': search_by_phones
 }
+    print("possible commands:")
 
+
+    for command_data in bot_commands():
+        name = f"{command_data['name']}"
+        args = f" [{', '.join(command_data['args'])}]" if command_data['args'] else ''
+        print(f"'{name}{args}' - {command_data['desc']}")
 
 
 def exit(history_file):
@@ -72,7 +81,9 @@ def exit(history_file):
 def main():
     command_history = "../.command_history"
     contacts = AddressBook()
+    session = PromptSession(completer=CommandCompleter())
     print("[bold blue]Welcome to the assistant bot![/bold blue]\n\U0001F929  \U0001F929  \U0001F929\n")
+
 
     try:
         readline.read_history_file(command_history)
@@ -81,7 +92,7 @@ def main():
 
     while True:
         try:
-            user_input = input("Enter a command: ").strip()
+            user_input = session.prompt('Enter a command: ').strip()
         except KeyboardInterrupt:
             exit(command_history)
             break
@@ -92,16 +103,19 @@ def main():
             exit(command_history)
             break
         elif command == "hello":
-            print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
-        elif command in command_dict:
-            print(command_dict[command](args, contacts))
+             print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
+        elif command_exists(command):
+            func_name = find_command_by_name(command)['func']
+            func = globals()[func_name]
+            print(func(args, contacts))
         elif command == "all":
             show_all(args, contacts, console)
         elif command == "help":
             show_help()
         else:
             print("[bold yellow]Invalid command.[/bold yellow]\n\U0001F914\n")
-          #  show_help()
+            print(f"Did you mean '{find_closest_command(command)}'?\n")
+            show_help()
 
 
 if __name__ == "__main__":
