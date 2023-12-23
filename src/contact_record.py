@@ -1,6 +1,9 @@
 import datetime
+import re
+
 from src.utils.cli_parse_decorator import *
 from src.utils.validator import is_valid_phone, is_valid_email
+from src.utils.vim import edit_note_with_vim
 
 
 class Field:
@@ -8,6 +11,9 @@ class Field:
         self.value = value
 
     def __str__(self):
+        return str(self.value)
+
+    def __repr__(self):
         return str(self.value)
 
     def __eq__(self, other):
@@ -51,6 +57,16 @@ class Address(Field):
         super().__init__(address)
 
 
+class Note(Field):
+    def __init__(self, value):
+        super().__init__(value)
+
+
+class Tag(Field):
+    def __init__(self, value):
+        super().__init__(value)
+
+
 class Email(Field):
     def __init__(self, email):
         if not self.is_valid(email):
@@ -69,6 +85,8 @@ class Record:
         self.emails = []
         self.address = []
         self.birthday = None
+        self.notes = Field("")
+        self.notes_tags = []
 
     def __str__(self):
         return (
@@ -77,6 +95,8 @@ class Record:
             f"phones: {', '.join(p.value for p in self.phones)}\n"
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
+            f"notes: {self.notes.value}"
+            f"tags: {self.notes_tags}"
         )
 
     # Checks if the record field includes a value
@@ -95,7 +115,8 @@ class Record:
 
         no_nones = [item for item in fields if item is not None]
         field_values = list(map(lambda field: field.value, no_nones))
-        return value in field_values
+
+        return any(value in word.lower() for word in field_values)
 
     def add_phone(self, phone):
         if Phone.is_valid(phone):
@@ -153,3 +174,10 @@ class Record:
 
     def remove_address(self, address):
         self.address.remove(Address(address))
+
+    def add_note(self):
+        self.notes.value = edit_note_with_vim(self.notes.value)
+        self.notes_tags = [Field(word) for word in re.split(r"\s|\n", self.notes.value) if word.startswith("#")]
+
+    def edit_note(self):
+        self.add_note()

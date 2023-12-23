@@ -2,6 +2,8 @@ from collections import UserDict
 import os
 import pickle
 from rich import print
+import datetime
+import re
 
 from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
@@ -259,7 +261,7 @@ class PhoneBook(UserDict):
         )
 
     def search(self, value, field_name):
-        value = value.split(" ") if type(value) is str else [value]
+        value = re.split(r"\n|\s", value) if type(value) is str else [value]
         search_result = []
 
         for v in value:
@@ -284,3 +286,88 @@ class PhoneBook(UserDict):
     def search_by_phones(self, args):
         value = args[0]
         return self.search(value, "phones")
+
+    @dump_contacts
+    @input_error
+    def add_note(self, args):
+        [name] = args
+        contact = self.find(name)
+        if not contact:
+            record = Record(name)
+            self.add_record(record)
+
+        contact = self.find(name)
+        contact.add_note()
+        return "Notes added."
+
+    @dump_contacts
+    @input_error
+    def edit_note(self, args):
+        [name] = args
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        contact.edit_note()
+        return "Notes edited."
+
+    def search_by_note(self, args):
+        value = args[0]
+        return self.search(value, 'notes')
+
+    def search_by_tag(self, args):
+        value = args[0]
+        return self.search(value, 'notes_tags')
+
+
+class AddressBook(UserDict):
+    def __init__(self, load_from_file=True):
+        """
+        Initialize an AddressBook instance.
+
+        This constructor initializes an empty dictionary in the `data` attribute and
+        loads data from a file into it if the file exists.
+        """
+        super().__init__()
+        self.data = {}
+
+        if load_from_file:
+            self.load()
+
+    def add_record(self, record):
+        self.data[record.name.value] = record
+
+    def find(self, name):
+        return self.data.get(name, None)
+
+    def delete(self, name):
+        if name in self.data:
+            del self.data[name]
+        else:
+            raise RecordDoesNotExistError
+
+    def search_by(self, field_name, value):
+        records = list(self.data.values())
+        return list(
+            filter(lambda record: record.field_has_value(field_name, value), records)
+        )
+
+    def dump(self):
+        """
+        Serialize and save the data dictionary to a binary file using the Pickle format.
+        The data is saved to the file "address_book.bin" in binary mode.
+        :return: None
+        """
+        with open("./data/address_book.bin", "wb") as file:
+            pickle.dump(self.data, file)
+
+    def load(self):
+        """
+        Deserialize and load data from a binary file using the Pickle format.
+        If the file "address_book.bin" exists, it loads the data from it into the AddressBook instance.
+        :return:
+        """
+        FILENAME = "./data/address_book.bin"
+        if os.path.exists(FILENAME):
+            with open(FILENAME, "rb") as file:
+                self.data = pickle.load(file)
