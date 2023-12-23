@@ -96,7 +96,7 @@ class TestAddressBook(unittest.TestCase):
         )
         self.assertEqual(
             result,
-            f"{self.name}'s address '{new_address}' changed to '{changed_address}'.",
+            f"[bold cyan]{self.name}'s[/bold cyan] [bold purple]address[/bold purple] '{new_address}' [bold purple]changed to [/bold purple]'{changed_address}'.\n",
         )
         self.assertEqual(len(self.book.data[self.name].address), 1)
         collection = self.book.data[self.name].address
@@ -105,17 +105,20 @@ class TestAddressBook(unittest.TestCase):
         )
 
     def test_contact_phone_number(self):
+        invalid_phone_str = "[bold yellow]Invalid command format.[/bold yellow] 🤔\n[bold green]Phone number is not " \
+                            "correct. Expected format is 10 digits.[/bold green]\n"
+
         phone = "123"
         call_result = add_contact([self.name, phone], self.book)
         self.assertEqual(
-            call_result, "Phone number is not correct. Expected format is 10 digits."
+            call_result, invalid_phone_str
         )
         self.assertEqual(len(self.book.data), 0)
 
         phone = "aaa123bbb3"
         call_result = add_contact([self.name, phone], self.book)
         self.assertEqual(
-            call_result, "Phone number is not correct. Expected format is 10 digits."
+            call_result, invalid_phone_str
         )
         self.assertEqual(len(self.book.data), 0)
 
