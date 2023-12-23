@@ -1,6 +1,6 @@
 import datetime
-from utils.cli_parse_decorator import *
-from utils.validator import is_valid_phone, is_valid_email
+from src.utils.cli_parse_decorator import *
+from src.utils.validator import is_valid_phone, is_valid_email
 
 
 class Field:

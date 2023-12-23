@@ -2,13 +2,13 @@ from collections import UserDict
 import os
 import pickle
 from rich import print
-from utils.validator import is_valid_phone
-from utils.cli_parse_decorator import *
-from utils.dump_decorator import dump_contacts
-from phone_book import *
-from contact_record import Record
-from consol import *
-from birthdays import get_birthdays_per_week, get_birthdays_in_days
+from src.utils.validator import is_valid_phone
+from src.utils.cli_parse_decorator import *
+from src.utils.dump_decorator import dump_contacts
+from src.phone_book import *
+from src.contact_record import Record
+from src.consol import *
+from src.birthdays import get_birthdays_per_week, get_birthdays_in_days
 
 
 @dump_contacts
