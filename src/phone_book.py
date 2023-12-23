@@ -93,14 +93,14 @@ def show_phone(args, contacts):
 
 
 @input_error
-def show_all(args, contacts, console):
+def show_all(args, contacts):
     if args:
         raise ValueError 
 
     if not contacts.data:
         raise KeyError 
     else:
-        display_table_all(contacts, console)
+        display_table_all(contacts)
 
 
 @dump_contacts
