@@ -177,7 +177,11 @@ class Record:
 
     def add_note(self):
         self.notes.value = edit_note_with_vim(self.notes.value)
-        self.notes_tags = [Field(word) for word in re.split(r"\s|\n", self.notes.value) if word.startswith("#")]
+        self.notes_tags = [
+            Field(word)
+            for word in re.split(r"\s|\n", self.notes.value)
+            if word.startswith("#")
+        ]
 
     def edit_note(self):
         self.add_note()
