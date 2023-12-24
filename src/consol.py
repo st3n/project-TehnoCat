@@ -1,3 +1,4 @@
+import rich.style
 from rich.console import Console
 from rich.table import Table
 from src.command import bot_commands
@@ -49,19 +50,30 @@ class ConsolePrinter:
 
     def display_help(self):
         table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Command", style="cyan", width=15)
-        table.add_column("Args", style="cyan", width=15)
-        table.add_column("Description", style="yellow", width=110)
+        table.add_column("Command", style="blue", width=25)
+        table.add_column("Arguments", style="cyan", width=35)
+        table.add_column("Description", style="yellow", width=60)
 
+        unique_blocks = []
         for command_data in bot_commands():
-            name = f"{command_data['name']}"
-            args = (
-                f"[{', '.join(command_data['args'])}]"
-                if len(command_data["args"]) > 0
-                else ""
-            )
-            desc = command_data["desc"]
-            table.add_row(name, args, desc)
+            unique_blocks.append(command_data["block"])
+        unique_blocks = sorted(list(set(unique_blocks)))
+        unique_blocks.remove("general")
+        unique_blocks = ["general"] + unique_blocks
+
+        for block_name in unique_blocks:
+            table.add_section()
+            table.add_row(block_name.upper(), style=rich.style.Style(color="magenta", bold=True))
+            for command_data in bot_commands():
+                if command_data["block"] == block_name:
+                    name = f"{command_data['name']}"
+                    args = (
+                        f"{' '.join(['<' + c + '>' for c in command_data['args']])}"
+                        if len(command_data["args"]) > 0
+                        else "no arguments"
+                    )
+                    desc = command_data["desc"]
+                    table.add_row(name, args, desc)
 
         self.console.print(table)
 
