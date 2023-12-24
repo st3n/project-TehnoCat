@@ -99,6 +99,21 @@ class Record:
             f"tags: {[tag.value for tag in self.notes_tags]}"
         )
 
+    def __repr__(self):
+        return "Record(%s,)" % (self.name,)
+
+    def __eq__(self, other):
+        if isinstance(other, Record):
+            return self.name == other.name
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(self.__repr__())
+
     # Checks if the record field includes a value
     # Compitable with arrays and literal constants
     #

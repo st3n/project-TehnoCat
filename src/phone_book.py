@@ -309,16 +309,17 @@ class PhoneBook(UserDict):
         )
         self.console.display_birthdays_in_days(data)
 
-    def search(self, value, field_name):
-        value = re.split(r"\n|\s", value) if type(value) is str else [value]
+    def search(self, values, field_name):
+        values = [v.lower() for v in values]
         search_result = []
 
-        for v in value:
+        for v in values:
             search_result += self.search_by(field_name, v)
 
+        search_result = set(search_result)
         print(f"{len(search_result)} records found:")
         res = [(rec.name.value, rec) for rec in search_result]
-        self.console.display_table(res, highlight={field_name: value})
+        self.console.display_table(res, highlight={field_name: values})
 
     def search_by(self, field_name, value):
         records = list(self.data.values())
@@ -327,20 +328,20 @@ class PhoneBook(UserDict):
         )
 
     def search_by_name(self, args):
-        value = args[0]
-        return self.search(value, "name")
+        values = args
+        return self.search(values, "name")
 
     def search_by_birthday(self, args):
         value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
         return self.search(value, "birthday")
 
     def search_by_emails(self, args):
-        value = args[0]
-        return self.search(value, "emails")
+        values = args
+        return self.search(values, "emails")
 
     def search_by_phones(self, args):
-        value = args[0]
-        return self.search(value, "phones")
+        values = args
+        return self.search(values, "phones")
 
     @dump_contacts
     @input_error
@@ -367,9 +368,9 @@ class PhoneBook(UserDict):
         return "Notes edited."
 
     def search_by_note(self, args):
-        value = args[0]
-        return self.search(value, "notes")
+        values = args
+        return self.search(values, "notes")
 
     def search_by_tag(self, args):
-        value = args[0]
-        return self.search(value, "notes_tags")
+        values = args
+        return self.search(values, "notes_tags")

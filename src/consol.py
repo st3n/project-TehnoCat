@@ -14,10 +14,11 @@ class ConsolePrinter:
     @staticmethod
     def highlight_substrings(text, substrings, style="bold white on red"):
         """Highlights substrings within a text with the given style."""
+        lowered_text = text.lower()
         highlighted_text = Text()
         start = 0
         for substring in substrings:
-            index = text.find(substring, start)
+            index = lowered_text.find(substring, start)
             if index == -1:
                 continue
             highlighted_text.append(text[start:index])
