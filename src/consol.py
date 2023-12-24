@@ -9,8 +9,8 @@ class ConsolePrinter:
         self.console = Console()
 
 
-    def display_table(self, records: dict):
-        table = Table(show_header=True, header_style="bold magenta")
+    def display_table(self, records):
+        table = Table(show_header=True, header_style="bold magenta", show_lines=True)
         table.add_column("Name", style="cyan", width=20)
         table.add_column("Phones", style="yellow", width=40)
         table.add_column("Address", style="blue", width=30)

@@ -153,13 +153,13 @@ def bot_commands():
         {"name": "help", "args": [], "desc": "print help message"},
         {
             "name": "add-note",
-            "args": ["name", "note"],
+            "args": ["name"],
             "desc": "add note",
             "func": "add_note",
         },
         {
             "name": "edit-note",
-            "args": ["name", "note"],
+            "args": ["name"],
             "desc": "edit note",
             "func": "edit_note",
         },
@@ -174,6 +174,12 @@ def bot_commands():
             "args": ["name", "tag"],
             "desc": "search_by_tag",
             "func": "search_by_tag",
+        },
+        {
+            "name": "import-demo",
+            "args": [],
+            "desc": "Imports demo data",
+            "func": "import_demo",
         },
     ]
 
