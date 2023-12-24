@@ -1,3 +1,4 @@
+import rich.style
 from rich.console import Console
 from rich.table import Table
 from src.command import bot_commands
@@ -7,7 +8,6 @@ class ConsolePrinter:
     def __init__(self, contacts):
         self.contacts = contacts
         self.console = Console()
-
 
     def display_table(self, records):
         table = Table(show_header=True, header_style="bold magenta", show_lines=True)
@@ -20,10 +20,26 @@ class ConsolePrinter:
         table.add_column("Tags", style="green", width=20)
 
         for name, record in records:
-            phones_str = ", ".join(str(p.value) for p in record.phones) if hasattr(record, "phones") and record.phones else "None"
-            addresses_str = ", ".join(str(a.value) for a in record.address) if hasattr(record, "address") and record.address else "None"
-            emails_str = ", ".join(str(e.value) for e in record.emails) if hasattr(record, "emails") and record.emails else "None"
-            birthday_str = str(record.birthday) if hasattr(record, "birthday") and record.birthday else "None"
+            phones_str = (
+                ", ".join(str(p.value) for p in record.phones)
+                if hasattr(record, "phones") and record.phones
+                else "None"
+            )
+            addresses_str = (
+                ", ".join(str(a.value) for a in record.address)
+                if hasattr(record, "address") and record.address
+                else "None"
+            )
+            emails_str = (
+                ", ".join(str(e.value) for e in record.emails)
+                if hasattr(record, "emails") and record.emails
+                else "None"
+            )
+            birthday_str = (
+                str(record.birthday)
+                if hasattr(record, "birthday") and record.birthday
+                else "None"
+            )
             notes_str = str(record.notes) if record.notes else "None"
             tags_str = (
                 str("\n".join([tag.value for tag in record.notes_tags]))
@@ -42,29 +58,39 @@ class ConsolePrinter:
 
         self.console.print(table)
 
-
     def display_table_all(self):
         self.display_table(self.contacts.data.items())
 
-
     def display_help(self):
         table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Command", style="cyan", width=15)
-        table.add_column("Args", style="cyan", width=15)
-        table.add_column("Description", style="yellow", width=110)
+        table.add_column("Command", style="blue", width=25)
+        table.add_column("Arguments", style="cyan", width=35)
+        table.add_column("Description", style="yellow", width=60)
 
+        unique_blocks = []
         for command_data in bot_commands():
-            name = f"{command_data['name']}"
-            args = (
-                f"[{', '.join(command_data['args'])}]"
-                if len(command_data["args"]) > 0
-                else ""
+            unique_blocks.append(command_data["block"])
+        unique_blocks = sorted(list(set(unique_blocks)))
+        unique_blocks.remove("general")
+        unique_blocks = ["general"] + unique_blocks
+
+        for block_name in unique_blocks:
+            table.add_section()
+            table.add_row(
+                block_name.upper(), style=rich.style.Style(color="magenta", bold=True)
             )
-            desc = command_data["desc"]
-            table.add_row(name, args, desc)
+            for command_data in bot_commands():
+                if command_data["block"] == block_name:
+                    name = f"{command_data['name']}"
+                    args = (
+                        f"{' '.join(['<' + c + '>' for c in command_data['args']])}"
+                        if len(command_data["args"]) > 0
+                        else "no arguments"
+                    )
+                    desc = command_data["desc"]
+                    table.add_row(name, args, desc)
 
         self.console.print(table)
-
 
     def display_address(self, address: str):
         if address:
@@ -72,9 +98,10 @@ class ConsolePrinter:
         else:
             self.console.print("[bold cyan]None[/bold cyan]\n")
 
-
     def display_birthdays_next_week(self, birthdays: dict):
-        table = Table(title="Birthdays per Day", show_header=True, header_style="bold magenta")
+        table = Table(
+            title="Birthdays per Day", show_header=True, header_style="bold magenta"
+        )
         table.add_column("Day", style="cyan", width=15)
         table.add_column("Names", style="yellow", width=50)
 
@@ -87,9 +114,11 @@ class ConsolePrinter:
         day_of_week, birthday_data, users = data
 
         table = Table(title="Birthdays", show_header=True, header_style="bold magenta")
-        table.add_column(f"Birthday Celebrant on {day_of_week} {birthday_data}", style="cyan")
+        table.add_column(
+            f"Birthday Celebrant on {day_of_week} {birthday_data}", style="cyan"
+        )
 
         for user in users:
-            table.add_row(user['name'])
+            table.add_row(user["name"])
 
         self.console.print(table)
