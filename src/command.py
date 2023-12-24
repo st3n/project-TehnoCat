@@ -154,10 +154,11 @@ def find_command_by_name(command_name):
         (
             command_info
             for command_info in bot_commands()
-            if command_info.get("name") == command_name
+            if command_info.get("name") == command_name and command_name.lower() != "all"
         ),
         None,
     )
+
 
 
 def find_closest_command(command_name):

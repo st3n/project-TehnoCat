@@ -76,8 +76,8 @@ def input_error(func):
             BirthdayValueError,
         ) as e:
             return e.message
-        except KeyError:
-            if func.__name__ == "show_all":
-                return "[/bold yellow]The contacts list is empty.[/bold yellow]\n"
+    #    except KeyError:
+    #        if func.__name__ == "show_all":
+    #            return "[/bold yellow]The contacts list is empty.[/bold yellow]\n"
 
     return inner

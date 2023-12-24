@@ -3,13 +3,14 @@ import os
 import pickle
 from rich import print
 import datetime
+from rich.console import Console
 
-from src.utils.validator import is_valid_phone
-from src.utils.cli_parse_decorator import *
-from src.utils.dump_decorator import dump_contacts
-from src.contact_record import Record
-from src.consol import display_table_all
-from src.birthdays import get_birthdays_per_week, get_birthdays_in_days
+from utils.validator import is_valid_phone
+from utils.cli_parse_decorator import *
+from utils.dump_decorator import dump_contacts
+from contact_record import Record
+from consol import display_table_all
+from birthdays import get_birthdays_per_week, get_birthdays_in_days
 
 
 @dump_contacts
@@ -81,7 +82,7 @@ def change_contact(args, contacts):
 
 
 @input_error
-def show_phone(args, contacts):
+def show_contact(args, contacts):
     if len(args) < 1:
         raise ValueError
 
@@ -93,8 +94,23 @@ def show_phone(args, contacts):
     return str(contact)
 
 
+
 @input_error
-def show_all(args, contacts):
+def show_phone(args, contacts):
+    if len(args) < 1:
+        raise ValueError
+
+    name = args[0]
+    contact = contacts.find(name)
+    if not contact:
+        raise RecordDoesNotExistError
+
+    phones_str = ", ".join(str(phone.value) for phone in contact.phones) if contact.phones else "None"
+    return phones_str + "\n"
+
+
+@input_error
+def show_all(args, contacts, console):
     if args:
         raise ValueError
 
@@ -120,13 +136,15 @@ def add_birthday(args, contacts):
 @dump_contacts
 @input_error
 def add_email(args, contacts):
-    name, email = args
+    name, *emails = args
     contact = contacts.find(name)
     if not contact:
         raise RecordDoesNotExistError
 
-    contact.add_email(email)
-    return "[bold purple]Email added[/bold purple].\n"
+    for email in emails:
+        contact.add_email(email)
+
+    return "[bold purple]Emails added[/bold purple].\n"
 
 
 @dump_contacts
@@ -135,12 +153,16 @@ def add_address(args, contacts):
     if len(args) < 2:
         raise ValueError
 
-    contact = contacts.find(args[0])
-    if not contact:
+    name = args[0]
+    address = " ".join(args[1:])
+    
+    contact = contacts.find(name)
+    
+    if contact:
+        contact.add_address(address)
+        return f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{address}' [magenta]added[/magenta].\n"
+    else:
         raise RecordDoesNotExistError
-
-    contact.add_address(" ".join(args[1:]))
-    return "[bold purple]Address added[/bold purple].\n"
 
 
 @input_error
@@ -152,33 +174,45 @@ def show_birthday(args, contacts):
     contact = contacts.find(name)
     if not contact:
         raise RecordDoesNotExistError
-
-    return contact.birthday
+    birthday_str = str(contact.birthday) if contact.birthday else "None"
+    return birthday_str + "\n" 
 
 
 @input_error
 def show_email(args, contacts):
-    if len(args) == 0:
-        raise ValueError
+    if not args:
+        raise ValueError("Name is required.")
+    
     name = args[0]
     contact = contacts.find(name)
     if not contact:
         raise RecordDoesNotExistError
+    
+    console = Console()
 
-    return contact.emails[0]
-
-
-@input_error
+    if contact.emails:
+        emails_str = "\n".join(f"[bold cyan]{email.value}[/bold cyan]" for email in contact.emails)
+        console.print(emails_str + "\n")
+    else:
+        console.print("[bold cyan]None[/bold cyan]\n")
+ 
+  
 def show_address(args, contacts):
-    if len(args) == 0:
-        raise ValueError
+    if not args:
+        raise ValueError("Name is required.")
+    
     name = args[0]
     contact = contacts.find(name)
     if not contact:
         raise RecordDoesNotExistError
 
-    return contact.address[0]
+    console = Console()
 
+    if contact.address:
+        address_str = "\n".join(f"[bold cyan]{address.value}[/bold cyan]" for address in contact.address)
+        console.print(address_str + "\n")
+    else:
+        console.print("[bold cyan]None[/bold cyan]\n")
 
 @input_error
 def show_birthdays_next_week(_, contacts):

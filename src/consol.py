@@ -2,6 +2,7 @@ from rich.console import Console
 from rich.table import Table
 
 
+
 def display_table_all(contacts):
     console = Console()
 
@@ -13,13 +14,16 @@ def display_table_all(contacts):
     table.add_column("Birthday", style="green", width=20)
 
     for name, record in contacts.data.items():
-        phones_str = ", ".join(str(p.value) for p in record.phones)
-        address_str = (
-            str(record.address[0].value)
-            if hasattr(record, "address") and record.address
-            else "None"
-        )
-        email_str = str(record.emails[0].value) if record.emails else "None"
-        birthday_str = str(record.birthday) if record.birthday else "None"
-        table.add_row(name, phones_str, address_str, email_str, birthday_str)
+        phones_str = ", ".join(str(p.value) for p in record.phones) if hasattr(record, "phones") and record.phones else "None"
+        
+        addresses_str = ", ".join(str(a.value) for a in record.address) if hasattr(record, "address") and record.address else "None"
+        
+        emails_str = ", ".join(str(e.value) for e in record.emails) if hasattr(record, "emails") and record.emails else "None"
+        
+        birthday_str = str(record.birthday) if hasattr(record, "birthday") and record.birthday else "None"
+        
+        table.add_row(name, phones_str, addresses_str, emails_str, birthday_str)
+
     console.print(table)
+
+

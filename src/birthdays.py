@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
-
+from rich.console import Console
+from rich.table import Table
 
 def get_birthdays_per_week(users):
     # 1. data preparation
@@ -37,9 +38,16 @@ def get_birthdays_per_week(users):
                 birthday_day_of_week = "Monday"
             birthdays_per_day[birthday_day_of_week].append(name)
 
-    return "\n".join(
-        [f"{day}: {', '.join(names)}" for day, names in birthdays_per_day.items()]
-    )
+    console = Console()
+    table = Table(title="Birthdays per Day", show_header=True, header_style="bold magenta")
+    table.add_column("Day", style="cyan", width=15)
+    table.add_column("Names", style="yellow", width=50)
+
+    for day, names in birthdays_per_day.items():
+        table.add_row(day, ", ".join(names))
+
+    console.print(table)
+    
 
 
 def get_birthdays_in_days(users, days_from_now=0):
