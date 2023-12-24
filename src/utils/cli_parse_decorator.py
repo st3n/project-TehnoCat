@@ -62,6 +62,10 @@ def input_error(func):
                 "show_email": f"{error_msg} \n[bold green]Use 'show-email. After the command, write your name.[/bold green]\n",
                 "show_address": f"{error_msg}\n[bold green] Use 'show-address. After the command, write your name.[/bold green]\n",
                 "show_birthday": f"{error_msg}\n[bold green]Use 'show-birthday After the command, write your name.[/bold green]\n",
+                "add_note": f"{error_msg}\n[bold green]Use 'add-note [name]'.[/bold green]\n",
+                "edit_note": f"{error_msg}\n[bold green]Use 'edit-note [name]'.[/bold green]\n",
+                "search_by_note": f"{error_msg}\n[bold green]Use 'search_by_note [search string]' and note editor will open[/bold green]\n",
+                "search_by_tag": f"{error_msg}\n[bold green]Use 'search_by_tag [search string]' and note editor will open.[/bold green]\n",
             }[func.__name__]
         except (
             EmailValueError,

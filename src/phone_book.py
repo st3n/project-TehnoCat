@@ -2,6 +2,8 @@ from collections import UserDict
 import os
 import pickle
 from rich import print
+import datetime
+import re
 
 from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
@@ -70,7 +72,7 @@ class PhoneBook(UserDict):
         else:
             record = Record(name)
             record.add_phone(phone)
-            self.data.add_record(record)
+            self.add_record(record)
 
         print(f"Phone number {phone} for contact {name} added.")
 
@@ -124,7 +126,9 @@ class PhoneBook(UserDict):
             raise ValueError
 
         self.data[name].edit_address(addresses[0], addresses[1])
-        print(f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'.")
+        res = f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'."
+        print(res)
+        return res
 
     @input_error
     def show_phone(self, args):
@@ -222,7 +226,6 @@ class PhoneBook(UserDict):
         raise SystemExit(0)
 
     @input_error
-    @input_error
     def show_birthdays_next_week(self):
         contacts_with_birthdays = list(
             filter(lambda name: self.find(name).birthday is not None, self.data)
@@ -259,15 +262,21 @@ class PhoneBook(UserDict):
         )
 
     def search(self, value, field_name):
-        value = value.split(" ") if type(value) is str else [value]
+        value = re.split(r"\n|\s", value) if type(value) is str else [value]
         search_result = []
 
         for v in value:
             search_result += self.search_by(field_name, v)
 
-        res = f"{len(search_result)} records found\n\n"
-        res += "\n".join(list(map(lambda sr: str(sr), search_result)))
-        return res
+        print(f"{len(search_result)} records found:")
+        res = [(rec.name.value, rec) for rec in search_result]
+        self.console.display_table(res)
+
+    def search_by(self, field_name, value):
+        records = list(self.data.values())
+        return list(
+            filter(lambda record: record.field_has_value(field_name, value), records)
+        )
 
     def search_by_name(self, args):
         value = args[0]
@@ -284,3 +293,35 @@ class PhoneBook(UserDict):
     def search_by_phones(self, args):
         value = args[0]
         return self.search(value, "phones")
+
+    @dump_contacts
+    @input_error
+    def add_note(self, args):
+        [name] = args
+        contact = self.find(name)
+        if not contact:
+            record = Record(name)
+            self.add_record(record)
+
+        contact = self.find(name)
+        contact.add_note()
+        return "Notes added."
+
+    @dump_contacts
+    @input_error
+    def edit_note(self, args):
+        [name] = args
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        contact.edit_note()
+        return "Notes edited."
+
+    def search_by_note(self, args):
+        value = args[0]
+        return self.search(value, "notes")
+
+    def search_by_tag(self, args):
+        value = args[0]
+        return self.search(value, "notes_tags")

@@ -4,7 +4,12 @@ from prompt_toolkit.completion import Completer, Completion
 
 def bot_commands():
     return [
-        {"name": "hello", "args": [], "desc": "greetings message", "func": "hello"},
+        {
+            "name": "hello",
+            "args": [],
+            "desc": "greetings message",
+            "func": "hello",
+        },
         {
             "name": "add",
             "args": ["name", "phone"],
@@ -96,7 +101,7 @@ def bot_commands():
             "func": "show_birthday",
         },
         {
-            "name": "birthdays-next-week",
+            "name": "birthdays",
             "args": [],
             "desc": "show all birthdays from the phone book on the next week",
             "func": "show_birthdays_next_week",
@@ -137,9 +142,33 @@ def bot_commands():
             "desc": "print the contacts phone book",
             "func": "show_all",
         },
-        {"name": "close", "args": [], "desc": "quit from the program", "func": "exit"},
-        {"name": "exit", "args": [], "desc": "quit from the program", "func": "exit"},
-        {"name": "help", "args": [], "desc": "print help message", "func": "show_help"},
+        {"name": "close", "args": [], "desc": "quit from the program"},
+        {"name": "exit", "args": [], "desc": "quit from the program"},
+        {"name": "help", "args": [], "desc": "print help message"},
+        {
+            "name": "add-note",
+            "args": ["name", "note"],
+            "desc": "add note",
+            "func": "add_note",
+        },
+        {
+            "name": "edit-note",
+            "args": ["name", "note"],
+            "desc": "edit note",
+            "func": "edit_note",
+        },
+        {
+            "name": "search-by-note",
+            "args": ["name", "note"],
+            "desc": "search_by_note",
+            "func": "search_by_note",
+        },
+        {
+            "name": "search-by-tag",
+            "args": ["name", "tag"],
+            "desc": "search_by_tag",
+            "func": "search_by_tag",
+        },
     ]
 
 
