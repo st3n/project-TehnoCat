@@ -59,10 +59,16 @@ def bot_commands():
             "func": "remove_contact",
         },
         {
-            "name": "phone",
+            "name": "show_contact",
             "args": ["name"],
-            "desc": "show the phone of the user with entered name",
-            "func": "show_phone",
+            "desc": "show the contact info",
+            "func": "show_contact",
+        },
+        {
+            "name": "show_phone",
+            "args": ["name"],
+            "desc": "show the contact phones",
+            "func": "show_contact",
         },
         {
             "name": "add-birthday",
@@ -85,13 +91,13 @@ def bot_commands():
         {
             "name": "show-email",
             "args": ["name"],
-            "desc": "show email for name 'name'",
+            "desc": "show emails for name 'name'",
             "func": "show_email",
         },
         {
             "name": "show-address",
             "args": ["name"],
-            "desc": "show email for name 'name'",
+            "desc": "show addresses for name 'name'",
             "func": "show_address",
         },
         {

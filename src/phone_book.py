@@ -74,7 +74,7 @@ class PhoneBook(UserDict):
             record.add_phone(phone)
             self.add_record(record)
 
-        print(f"Phone number {phone} for contact {name} added.")
+        return f"[bold purple]Phone number[/bold purple] {phone} [bold purple]for contact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n"
 
     @dump_contacts
     @input_error
@@ -86,20 +86,20 @@ class PhoneBook(UserDict):
 
         if len(args) == 1:
             self.delete(name)
-            print(f"Contact {name} removed.")
+            print(f"[magenta]Contact[/magenta] [bold cyan]{name}[/bold cyan] [magenta]removed[/magenta].\n")
             return
 
         if len(args) == 2:
             if "@" in args[1]:
                 self.data[name].remove_email(args[1])
-                print(f"{name}'s email '{args[1]}' removed.")
+                print(f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args[1]}' [magenta]removed[/magenta].\n")
             elif args[1].isdigit():
                 self.data[name].remove_phone(args[1])
-                print(f"{name}'s phone '{args[1]}' removed.")
+                print(f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args[1]}' [magenta]removed[/magenta].\n")
         else:
             full_address = " ".join(args[1:])
             self.data[name].remove_address(full_address)
-            print(f"{name}'s address '{full_address}' removed.")
+            print(f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{full_address}' [magenta]removed[/magenta].\n")
 
     @dump_contacts
     @input_error
@@ -112,11 +112,11 @@ class PhoneBook(UserDict):
         if len(args) == 3:
             if "@" in args[1] and "@" in args[2]:
                 self.data[name].edit_email(args[1], args[2])
-                print(f"{name}'s email '{args[1]}' changed to '{args[2]}'.")
+                print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args[1]}' changed to '{args[2]}'.\n")
                 return
             elif args[1].isdigit() and args[2].isdigit():
                 self.data[name].edit_phone(args[1], args[2])
-                print(f"{name}'s phone '{args[1]}' changed to '{args[2]}'.")
+                print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args[1]}'[bold purple] changed to[/bold purple] '{args[2]}'.\n")
                 return
 
         addresses = [
@@ -126,12 +126,12 @@ class PhoneBook(UserDict):
             raise ValueError
 
         self.data[name].edit_address(addresses[0], addresses[1])
-        res = f"{name}'s address '{addresses[0]}' changed to '{addresses[1]}'."
+        res = f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{addresses[0]}' [bold purple]changed to [/bold purple]'{addresses[1]}'.\n"
         print(res)
         return res
 
     @input_error
-    def show_phone(self, args):
+    def show_contact(self, args):
         if len(args) < 1:
             raise ValueError
 
@@ -141,6 +141,17 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         print(str(contact))
+
+    @input_error
+    def show_phone(self, args):
+        if len(args) == 0:
+            raise ValueError
+        name = args[0]
+        contact = self.find(name)
+        if not contact:
+            raise RecordDoesNotExistError
+
+        print(", ".join(str(p.value) for p in contact.phones) if contact.phones else "None")
 
     @input_error
     def show_all(self):
@@ -161,28 +172,32 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data.add_birthday(date)
-        print("Birthday added.")
+        print("[bold purple]Birthday added[/bold purple].\n")
 
     @dump_contacts
     @input_error
     def add_email(self, args):
-        name, email = args
+        name, *emails = args
         contact = self.find(name)
         if not contact:
             raise RecordDoesNotExistError
 
-        contact.add_email(email)
-        print("Email added.")
+        for email in emails:
+
+            contact.add_email(email)
+        print("[bold purple]Emails added[/bold purple].\n")
 
     @dump_contacts
     @input_error
     def add_address(self, args):
-        contact = self.find(args[0])
+        name = args[0]
+        contact = self.find(name)
         if not contact:
             raise RecordDoesNotExistError
 
-        contact.add_address(" ".join(args[1:]))
-        print("Address added.")
+        address = " ".join(args[1:])
+        contact.add_address(address)
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{address}' [magenta]added[/magenta].\n")
 
     @input_error
     def show_birthday(self, args):
@@ -194,7 +209,7 @@ class PhoneBook(UserDict):
         if not contact:
             raise RecordDoesNotExistError
 
-        print(contact.birthday)
+        print(str(contact.birthday) if contact.birthday else "None")
 
     @input_error
     def show_email(self, args):
@@ -205,7 +220,7 @@ class PhoneBook(UserDict):
         if not contact:
             raise RecordDoesNotExistError
 
-        print(contact.emails[0])
+        print(", ".join(str(p.value) for p in contact.emails) if contact.emails else "None")
 
     @input_error
     def show_address(self, args):
@@ -216,8 +231,9 @@ class PhoneBook(UserDict):
         if not contact:
             raise RecordDoesNotExistError
 
-        print(contact.address[0])
-
+        address_str = "\n".join(f"[bold cyan]{address.value}[/bold cyan]" for address in contact.address)
+        self.console.display_address(address_str)
+ 
     def hello(self):
         print("[bold blue]How can I help you?[/bold blue]\U0001F600\n")
 
@@ -230,17 +246,17 @@ class PhoneBook(UserDict):
         contacts_with_birthdays = list(
             filter(lambda name: self.find(name).birthday is not None, self.data)
         )
-        print(
-            get_birthdays_per_week(
-                map(
-                    lambda name: {
-                        "name": name,
-                        "birthday": self.find(name).birthday.value,
-                    },
-                    contacts_with_birthdays,
-                )
+        birthdays_per_week = birthdays_per_week(
+            map(
+                lambda name: {
+                    "name": name,
+                    "birthday": self.find(name).birthday.value,
+                },
+                contacts_with_birthdays,
             )
         )
+
+        self.console.display_birthdays_next_week(birthdays_per_week)
 
     @input_error
     def show_birthdays_in_days(self, args):
@@ -248,8 +264,7 @@ class PhoneBook(UserDict):
         contacts_with_birthdays = list(
             filter(lambda name: self.find(name).birthday is not None, self.data)
         )
-        print(
-            get_birthdays_in_days(
+        data =  get_birthdays_in_days(
                 map(
                     lambda name: {
                         "name": name,
@@ -259,7 +274,7 @@ class PhoneBook(UserDict):
                 ),
                 int(days_from_now),
             )
-        )
+        self.console.display_birthdays_in_days(data)
 
     def search(self, value, field_name):
         value = re.split(r"\n|\s", value) if type(value) is str else [value]

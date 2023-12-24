@@ -8,7 +8,8 @@ class ConsolePrinter:
         self.contacts = contacts
         self.console = Console()
 
-    def display_table(self, records):
+
+    def display_table(self, records: dict):
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Name", style="cyan", width=20)
         table.add_column("Phones", style="yellow", width=40)
@@ -19,14 +20,10 @@ class ConsolePrinter:
         table.add_column("Tags", style="green", width=20)
 
         for name, record in records:
-            phones_str = ", ".join(str(p.value) for p in record.phones)
-            address_str = (
-                str(record.address[0].value)
-                if hasattr(record, "address") and record.address
-                else "None"
-            )
-            email_str = str(record.emails[0].value) if record.emails else "None"
-            birthday_str = str(record.birthday) if record.birthday else "None"
+            phones_str = ", ".join(str(p.value) for p in record.phones) if hasattr(record, "phones") and record.phones else "None"
+            addresses_str = ", ".join(str(a.value) for a in record.address) if hasattr(record, "address") and record.address else "None"
+            emails_str = ", ".join(str(e.value) for e in record.emails) if hasattr(record, "emails") and record.emails else "None"
+            birthday_str = str(record.birthday) if hasattr(record, "birthday") and record.birthday else "None"
             notes_str = str(record.notes) if record.notes else "None"
             tags_str = (
                 str("\n".join([tag.value for tag in record.notes_tags]))
@@ -36,8 +33,8 @@ class ConsolePrinter:
             table.add_row(
                 name,
                 phones_str,
-                address_str,
-                email_str,
+                addresses_str,
+                emails_str,
                 birthday_str,
                 notes_str,
                 tags_str,
@@ -45,8 +42,10 @@ class ConsolePrinter:
 
         self.console.print(table)
 
+
     def display_table_all(self):
         self.display_table(self.contacts.data.items())
+
 
     def display_help(self):
         table = Table(show_header=True, header_style="bold magenta")
@@ -63,5 +62,34 @@ class ConsolePrinter:
             )
             desc = command_data["desc"]
             table.add_row(name, args, desc)
+
+        self.console.print(table)
+
+
+    def display_address(self, address: str):
+        if address:
+            self.console.print(address + "\n")
+        else:
+            self.console.print("[bold cyan]None[/bold cyan]\n")
+
+
+    def display_birthdays_next_week(self, birthdays: dict):
+        table = Table(title="Birthdays per Day", show_header=True, header_style="bold magenta")
+        table.add_column("Day", style="cyan", width=15)
+        table.add_column("Names", style="yellow", width=50)
+
+        for day, names in birthdays.items():
+            table.add_row(day, ", ".join(names))
+
+        self.console.print(table)
+
+    def display_birthdays_in_days(self, data: tuple):
+        day_of_week, birthday_data, users = data
+
+        table = Table(title="Birthdays", show_header=True, header_style="bold magenta")
+        table.add_column(f"Birthday Celebrant on {day_of_week} {birthday_data}", style="cyan")
+
+        for user in users:
+            table.add_row(user['name'])
 
         self.console.print(table)
