@@ -33,7 +33,7 @@ class Name(Field):
 class Birthday(Field):
     def __init__(self, birthday):
         try:
-            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y"))
+            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y").strftime("%d.%m.%Y"))
         except ValueError:
             raise BirthdayValueError
 
@@ -131,7 +131,15 @@ class Record:
         no_nones = [item for item in fields if item is not None]
         field_values = list(map(lambda field: field.value, no_nones))
 
-        return any(value.lower() in word.lower() for word in field_values)
+        result = False
+        for word in field_values:
+            if isinstance(word, datetime.datetime):
+                word = word.strftime("%d.%m.%Y")
+            if value.lower() in word.lower():
+                result = True
+                break
+
+        return result
 
     def add_phone(self, phone):
         if Phone.is_valid(phone):

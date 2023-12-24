@@ -310,7 +310,10 @@ class PhoneBook(UserDict):
         self.console.display_birthdays_in_days(data)
 
     def search(self, values, field_name):
-        values = [v.lower() for v in values]
+        if not isinstance(values, datetime):
+            values = [v.lower() for v in values]
+        else:
+            values = [values]
         match_scores, matched_substrings = {}, {}
 
         for v in values:
@@ -364,8 +367,8 @@ class PhoneBook(UserDict):
         return self.search(values, "name")
 
     def search_by_birthday(self, args):
-        value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
-        return self.search(value, "birthday")
+        values = args
+        return self.search(values, "birthday")
 
     def search_by_emails(self, args):
         values = args
