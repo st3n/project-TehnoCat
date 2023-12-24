@@ -177,7 +177,7 @@ def bot_commands():
             "args": [],
             "desc": "quit from the program",
             "block": "general",
-         },
+        },
         {
             "name": "exit",
             "args": [],
