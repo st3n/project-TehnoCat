@@ -7,6 +7,7 @@ import re
 
 from src.utils.validator import is_valid_phone
 from src.utils.cli_parse_decorator import *
+from src.utils.demo_data import generate_fake_contacts_data
 from src.utils.dump_decorator import dump_contacts
 from src.phone_book import *
 from src.birthdays import *
@@ -61,6 +62,16 @@ class PhoneBook(UserDict):
         if os.path.exists(FILENAME):
             with open(FILENAME, "rb") as file:
                 self.data = pickle.load(file)
+
+    def import_demo(self):
+        for contact_info in generate_fake_contacts_data(10):
+            self.add_contact([contact_info['name'], contact_info['phone']])
+            self.add_birthday([contact_info['name'], contact_info['birthday']])
+            self.add_email([contact_info['name'], contact_info['email']])
+            self.add_address([contact_info['name'], contact_info['address']])
+        
+        return 'Demo data has been imported successfully'
+        
 
     @dump_contacts
     @input_error
@@ -160,7 +171,7 @@ class PhoneBook(UserDict):
         if not contact:
             raise RecordDoesNotExistError
 
-        self.data.add_birthday(date)
+        contact.add_birthday(date)
         print("Birthday added.")
 
     @dump_contacts
