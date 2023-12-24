@@ -318,7 +318,7 @@ class PhoneBook(UserDict):
 
         print(f"{len(search_result)} records found:")
         res = [(rec.name.value, rec) for rec in search_result]
-        self.console.display_table(res)
+        self.console.display_table(res, highlight={field_name: value})
 
     def search_by(self, field_name, value):
         records = list(self.data.values())
