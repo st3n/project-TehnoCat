@@ -37,9 +37,7 @@ def get_birthdays_per_week(users):
                 birthday_day_of_week = "Monday"
             birthdays_per_day[birthday_day_of_week].append(name)
 
-    return "\n".join(
-        [f"{day}: {', '.join(names)}" for day, names in birthdays_per_day.items()]
-    )
+    return birthdays_per_day
 
 
 def get_birthdays_in_days(users, days_from_now=0):
@@ -53,8 +51,7 @@ def get_birthdays_in_days(users, days_from_now=0):
             users,
         )
     )
-    user_names = ", ".join(map(lambda user: user["name"], birthday_users))
-    return f"{birthday_day_of_week} ({birthday_str}): {user_names}"
+    return (birthday_day_of_week, birthday_str, birthday_users)
 
 
 # users = [
