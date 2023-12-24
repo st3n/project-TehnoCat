@@ -311,21 +311,72 @@ class PhoneBook(UserDict):
 
     def search(self, values, field_name):
         values = [v.lower() for v in values]
-        search_result = []
+        match_scores = {}
+        matched_substrings = {}
 
         for v in values:
-            search_result += self.search_by(field_name, v)
+            partial_matches = self.search_by_partial(field_name, v)
+            for record, substring in partial_matches:
+                match_score = len(substring)
+                existing_score = match_scores.get(record, 0)
 
-        search_result = set(search_result)
+                if match_score > existing_score:
+                    match_scores[record] = match_score
+                    matched_substrings[record] = substring
+
+        # Sort the matches based on match scores
+        sorted_matches = sorted(match_scores.items(), key=lambda x: x[1], reverse=True)
+        search_result = [rec[0] for rec in sorted_matches]
+
         print(f"{len(search_result)} records found:")
         res = [(rec.name.value, rec) for rec in search_result]
-        self.console.display_table(res, highlight={field_name: values})
+        highlight_substrings = {field_name: [matched_substrings[rec] for rec in search_result]}
+        self.console.display_table(res, highlight=highlight_substrings)
 
-    def search_by(self, field_name, value):
+    def get_best_match_length(self, record, field_name, value):
+        fields = getattr(record, field_name)
+
+        if type(fields) is not list:
+            fields = [fields]
+
+        no_nones = [item for item in fields if item is not None]
+        field_values = list(map(lambda field: field.value.lower(), no_nones))
+
+        best_match_length = 0
+        for field_value in field_values:
+            for i in range(len(value)):
+                for j in range(len(value), i, -1):
+                    if value[i:j] in field_value:
+                        best_match_length = max(best_match_length, j - i)
+                        break  # Break out of the innermost loop
+
+        return best_match_length
+
+    def search_by_partial(self, field_name, value, min_substring_length=3):
         records = list(self.data.values())
-        return list(
-            filter(lambda record: record.field_has_value(field_name, value), records)
-        )
+        partial_matches = {}
+
+        # Function to update the partial matches with the longest substring
+        def update_partial_matches(record, substring):
+            if record not in partial_matches or len(substring) > len(partial_matches[record]):
+                partial_matches[record] = substring
+
+        # Check for direct matches if the value is shorter than min_substring_length
+        if len(value) < min_substring_length:
+            for record in records:
+                if record.field_has_value(field_name, value):
+                    update_partial_matches(record, value)
+
+        # Generate and check all substrings of the value with length >= min_substring_length
+        else:
+            substrings = [value[i:j] for i in range(len(value))
+                          for j in range(i + min_substring_length, len(value) + 1)]
+            for substring in substrings:
+                for record in records:
+                    if record.field_has_value(field_name, substring):
+                        update_partial_matches(record, substring)
+
+        return partial_matches.items()
 
     def search_by_name(self, args):
         values = args
