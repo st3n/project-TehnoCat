@@ -47,6 +47,8 @@ class CommandParser:
             return self.parse_add_birthday_cmd(user_input)
         elif cmd == "add-note":
             return self.parse_add_notes_cmd(user_input)
+        elif "search-by" in cmd:
+            return self.parse_search_by_cmd(user_input)
         else:
             cmd_info = find_command_by_name(cmd)
             if cmd_info["args"]:
@@ -225,3 +227,10 @@ class CommandParser:
         else:
             raise ValueError
 
+    def parse_search_by_cmd(self, user_input):
+        method, *value = user_input.split(' ')
+        if method and value:
+            method = method.replace('-', '_')
+            return [method, {"value": value}]
+        else:
+            raise ValueError
