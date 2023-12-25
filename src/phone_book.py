@@ -346,16 +346,16 @@ class PhoneBook(UserDict):
         )
 
     def search_by_name(self, args):
-        return self.search([' '.join(args)], "name")
+        return self.search([' '.join(args['value'])], "name")
 
     def search_by_birthday(self, args):
-        return self.search(args, "birthday")
+        return self.search(args['value'], "birthday")
 
     def search_by_emails(self, args):
-        return self.search(args, "emails")
+        return self.search(args['value'], "emails")
 
     def search_by_phones(self, args):
-        return self.search(args, "phones")
+        return self.search(args['value'], "phones")
 
     @dump_contacts
     @input_error
@@ -382,9 +382,9 @@ class PhoneBook(UserDict):
         return "Notes edited."
 
     def search_by_note(self, args):
-        value = args[0]
+        value = args['value']
         return self.search(value, "notes")
 
     def search_by_tag(self, args):
-        value = args[0]
+        value = args['value']
         return self.search(value, "notes_tags")
