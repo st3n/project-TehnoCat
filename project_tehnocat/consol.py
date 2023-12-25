@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from src.command import bot_commands
+from project_tehnocat.command import bot_commands
 
 
 class ConsolePrinter:

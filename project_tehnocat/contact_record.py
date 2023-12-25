@@ -1,9 +1,9 @@
 import datetime
 import re
 
-from src.utils.cli_parse_decorator import *
-from src.utils.validator import is_valid_phone, is_valid_email
-from src.utils.vim import edit_note_with_vim
+from project_tehnocat.utils.cli_parse_decorator import *
+from project_tehnocat.utils.validator import is_valid_phone, is_valid_email
+from project_tehnocat.utils.vim import edit_note_with_vim
 
 
 class Field:

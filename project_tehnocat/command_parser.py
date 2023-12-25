@@ -1,7 +1,7 @@
 import re
 from rich import print
-from src.utils.cli_parse_decorator import input_error
-from src.command import *
+from project_tehnocat.utils.cli_parse_decorator import input_error
+from project_tehnocat.command import *
 
 
 class CommandParser:

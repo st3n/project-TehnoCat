@@ -1,7 +1,7 @@
 import unittest
-from src.phone_book import *
-from src.birthdays import *
-from src.utils.validator import *
+from project_tehnocat.phone_book import *
+from project_tehnocat.birthdays import *
+from project_tehnocat.utils.validator import *
 
 
 class TestAddressBook(unittest.TestCase):
