@@ -190,12 +190,14 @@ def bot_commands():
             "args": [],
             "desc": "quit from the program",
             "block": "general",
+            "func" : "exit"
         },
         {
             "name": "exit",
             "args": [],
             "desc": "quit from the program",
             "block": "general",
+            "func" : "exit"
         },
         {
             "name": "help",

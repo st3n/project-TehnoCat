@@ -234,3 +234,4 @@ class CommandParser:
             return [method, {"value": value}]
         else:
             raise ValueError
+
