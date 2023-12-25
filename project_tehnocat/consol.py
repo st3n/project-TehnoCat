@@ -1,7 +1,7 @@
 import rich.style
 from rich.console import Console
 from rich.table import Table
-from src.command import bot_commands
+from project_tehnocat.command import bot_commands
 
 
 class ConsolePrinter:

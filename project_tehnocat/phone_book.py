@@ -5,14 +5,14 @@ from rich import print
 import datetime
 import re
 
-from src.utils.validator import is_valid_phone
-from src.utils.cli_parse_decorator import *
-from src.utils.demo_data import generate_fake_contacts_data
-from src.utils.dump_decorator import dump_contacts
-from src.phone_book import *
-from src.birthdays import *
-from src.contact_record import Record
-from src.consol import ConsolePrinter
+from project_tehnocat.utils.validator import is_valid_phone
+from project_tehnocat.utils.cli_parse_decorator import *
+from project_tehnocat.utils.demo_data import generate_fake_contacts_data
+from project_tehnocat.utils.dump_decorator import dump_contacts
+from project_tehnocat.phone_book import *
+from project_tehnocat.birthdays import *
+from project_tehnocat.contact_record import Record
+from project_tehnocat.consol import ConsolePrinter
 
 
 class PhoneBook(UserDict):

@@ -1,9 +1,9 @@
 from prompt_toolkit import PromptSession
-from src.phone_book import *
-from src.utils.cli_parse_decorator import *
-from src.utils.console_history import HistoryConsole
-from src.command import *
-from src.command_parser import CommandParser
+from project_tehnocat.phone_book import *
+from project_tehnocat.utils.cli_parse_decorator import *
+from project_tehnocat.utils.console_history import HistoryConsole
+from project_tehnocat.command import *
+from project_tehnocat.command_parser import CommandParser
 
 
 def main():
