@@ -27,14 +27,20 @@ def bot_commands():
         },
         {
             "name": "change",
-            "args": ["name", "email" ,"old_email_value", "on", "new_email_value"],
+            "args": ["name", "email", "old_email_value", "on", "new_email_value"],
             "desc": "change the saved contact email",
             "func": "change_email",
             "block": "emails",
         },
         {
             "name": "change",
-            "args": ["name", "address", "\"old_address_value\"", "on", "\"new_address_value\""],
+            "args": [
+                "name",
+                "address",
+                '"old_address_value"',
+                "on",
+                '"new_address_value"',
+            ],
             "desc": "change the saved contact address",
             "func": "change_address",
             "block": "addresses",

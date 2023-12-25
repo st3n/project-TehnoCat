@@ -6,7 +6,6 @@ from src.command import *
 from src.command_parser import CommandParser
 
 
-
 def main():
     contacts = PhoneBook()
     cmd_parser = CommandParser()
@@ -35,6 +34,7 @@ def main():
         elif type(args) is str:
             func = getattr(contacts, args)
             func()
+
 
 if __name__ == "__main__":
     main()

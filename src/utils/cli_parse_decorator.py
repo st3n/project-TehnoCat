@@ -53,29 +53,29 @@ def input_error(func):
         except (ValueError, KeyError):
             print(
                 {
-                "add_contact": f"{error_msg}\n[bold green]Use 'add'. After the command, write your name and phone number.[/bold green]\n",
-                "change_phone": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
-                "change_email": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
-                "change_address": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
-                "remove_contact": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
-                "remove_phone": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete[/bold green]'.\n",
-                "remove_email": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
-                "remove_address": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
-                "show_phone": f"{error_msg}\n[bold green]Use 'phone' After the command, write your name[/bold green].\n",
-                "show_all": f"{error_msg}\n[bold green]Use only 'all' without arguments.[/bold green]\n",
-                "parse_input": f"{error_msg}\n[bold green]Use 'help' for commands list[/bold green]\n",
-                "add_birthday": f"{error_msg}\n[bold green]Use 'add-birthday' After the command, write your name and birthday in format 'DD.MM.YYYY'.[/bold green]\n",
-                "add_email": f"{error_msg} \n[bold green]Use 'add-email'. After the command, write your name and email for contact.[/bold green]\n",
-                "add_address": f"{error_msg}\n[bold green] Use 'add-address'. After the command, write your name and address for contact.[/bold green]\n",
-                "show_email": f"{error_msg} \n[bold green]Use 'show-email. After the command, write your name.[/bold green]\n",
-                "show_address": f"{error_msg}\n[bold green] Use 'show-address. After the command, write your name.[/bold green]\n",
-                "show_birthday": f"{error_msg}\n[bold green]Use 'show-birthday After the command, write your name.[/bold green]\n",
-                "add_note": f"{error_msg}\n[bold green]Use 'add-note [name]'.[/bold green]\n",
-                "edit_note": f"{error_msg}\n[bold green]Use 'edit-note [name]'.[/bold green]\n",
-                "search_by_note": f"{error_msg}\n[bold green]Use 'search_by_note [search string]' and note editor will open[/bold green]\n",
-                "search_by_tag": f"{error_msg}\n[bold green]Use 'search_by_tag [search string]' and note editor will open.[/bold green]\n",
-                "show_all": "[bold yellow]The contacts list is empty.[/bold yellow]\n"
-            }[func.__name__]
+                    "add_contact": f"{error_msg}\n[bold green]Use 'add'. After the command, write your name and phone number.[/bold green]\n",
+                    "change_phone": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
+                    "change_email": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
+                    "change_address": f"{error_msg}\n[bold green]Use 'change'. After the command, write your name and the information you want to change [/bold green].\n",
+                    "remove_contact": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
+                    "remove_phone": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete[/bold green]'.\n",
+                    "remove_email": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
+                    "remove_address": f"{error_msg}\n[bold green]Use 'remove'. After the command, write the name you want to delete and the information you want to delet[/bold green]'.\n",
+                    "show_phone": f"{error_msg}\n[bold green]Use 'phone' After the command, write your name[/bold green].\n",
+                    "show_all": f"{error_msg}\n[bold green]Use only 'all' without arguments.[/bold green]\n",
+                    "parse_input": f"{error_msg}\n[bold green]Use 'help' for commands list[/bold green]\n",
+                    "add_birthday": f"{error_msg}\n[bold green]Use 'add-birthday' After the command, write your name and birthday in format 'DD.MM.YYYY'.[/bold green]\n",
+                    "add_email": f"{error_msg} \n[bold green]Use 'add-email'. After the command, write your name and email for contact.[/bold green]\n",
+                    "add_address": f"{error_msg}\n[bold green] Use 'add-address'. After the command, write your name and address for contact.[/bold green]\n",
+                    "show_email": f"{error_msg} \n[bold green]Use 'show-email. After the command, write your name.[/bold green]\n",
+                    "show_address": f"{error_msg}\n[bold green] Use 'show-address. After the command, write your name.[/bold green]\n",
+                    "show_birthday": f"{error_msg}\n[bold green]Use 'show-birthday After the command, write your name.[/bold green]\n",
+                    "add_note": f"{error_msg}\n[bold green]Use 'add-note [name]'.[/bold green]\n",
+                    "edit_note": f"{error_msg}\n[bold green]Use 'edit-note [name]'.[/bold green]\n",
+                    "search_by_note": f"{error_msg}\n[bold green]Use 'search_by_note [search string]' and note editor will open[/bold green]\n",
+                    "search_by_tag": f"{error_msg}\n[bold green]Use 'search_by_tag [search string]' and note editor will open.[/bold green]\n",
+                    "show_all": "[bold yellow]The contacts list is empty.[/bold yellow]\n",
+                }[func.__name__]
             )
             return
         except (
