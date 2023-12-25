@@ -42,11 +42,6 @@ class PhoneBook(UserDict):
             del self.data[name]
         else:
             raise RecordDoesNotExistError
-        
-    def search_by(self, field_name, value):
-        records = list(self.data.values())
-        return list(filter(lambda record: record.field_has_value(field_name, value), records))
-
 
     def dump(self):
         """
