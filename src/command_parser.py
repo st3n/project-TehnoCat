@@ -51,7 +51,10 @@ class CommandParser:
             else:
                 return cmd_info["func"]
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c6b9a9d (PEP 8)
     def parse_add_cmd(self, user_input):
         add_match = self.add_pattern.match(user_input)
         if add_match:
@@ -153,7 +156,10 @@ class CommandParser:
 
         raise ValueError
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c6b9a9d (PEP 8)
     def parse_add_phone_cmd(self, user_input):
         add_phone_match = self.add_phone_pattern.match(user_input)
         if add_phone_match:
@@ -213,4 +219,7 @@ class CommandParser:
                 return ["add_birthday", {"name": name, "birthday": birthday}]
         else:
             raise ValueError
+<<<<<<< HEAD
 
+=======
+>>>>>>> c6b9a9d (PEP 8)

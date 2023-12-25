@@ -35,5 +35,6 @@ def main():
             func = getattr(contacts, args)
             func()
 
+
 if __name__ == "__main__":
     main()
