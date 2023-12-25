@@ -16,7 +16,7 @@ class TestAddressBook(unittest.TestCase):
 
     def test_add_contact(self):
         self.book.add_contact([self.name, self.phone])
-        new_name = "olha"
+        new_name = "name: olha,"
         new_phone = "3213123111"
         self.book.add_contact([new_name, new_phone])
         self.assertEqual(len(self.book), 2)
