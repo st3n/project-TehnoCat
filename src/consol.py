@@ -16,15 +16,18 @@ class ConsolePrinter:
         """Highlights substrings within a text with the given style."""
         lowered_text = text.lower()
         highlighted_text = Text()
-        start = 0
-        for substring in substrings:
-            index = lowered_text.find(substring, start)
-            if index == -1:
-                continue
-            highlighted_text.append(text[start:index])
-            highlighted_text.append(text[index: index + len(substring)], style=style)
-            start = index + len(substring)
-        highlighted_text.append(text[start:])
+        i = 0
+        while i < len(text):
+            matched = False
+            for substring in substrings:
+                if lowered_text.startswith(substring, i):
+                    highlighted_text.append(text[i:i + len(substring)], style=style)
+                    i += len(substring)
+                    matched = True
+                    break
+            if not matched:
+                highlighted_text.append(text[i])
+                i += 1
         return highlighted_text
 
     def display_table(self, records, highlight=None):
@@ -54,7 +57,7 @@ class ConsolePrinter:
                 else "None"
             )
             birthday_str = (
-                record.birthday.value
+                record.birthday.value.strftime("%d.%m.%Y")
                 if hasattr(record, "birthday") and record.birthday
                 else "None"
             )
@@ -68,6 +71,8 @@ class ConsolePrinter:
             if highlight:
                 [field_name] = highlight.keys()
                 [search_values] = highlight.values()
+
+                print(field_name)
                 if field_name == "name":
                     name = self.highlight_substrings(name, search_values)
                 elif field_name == "phones":
