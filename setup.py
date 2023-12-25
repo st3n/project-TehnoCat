@@ -11,5 +11,5 @@ setup(
     packages=["src"],
     include_package_data=True,
     entry_points={"console_scripts": ["tehnocat = src.assistant_bot_main:main"]},
-    install_requires=["prompt_toolkit", "jaro-winkler"],
+    install_requires=["prompt_toolkit", "jaro-winkler", "rich", "faker", "gnureadline"],
 )

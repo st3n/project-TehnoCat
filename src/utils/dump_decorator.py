@@ -4,7 +4,7 @@ def dump_contacts(func):
         result = func(*args, **kwargs)
         # Extract the contacts from the arguments
         # Assuming contacts is always the second argument
-        contacts = args[1]
+        contacts = args[0]
         # Call the dump method
         contacts.dump()
         # Return the original result

@@ -29,7 +29,9 @@ Enter a command:
 'phone [name]' - show the phone of the user with entered name
 'add-birthday [name] [date]' - add birthday for name 'name' in format 'DD.MM.YYYY'
 'show-birthday[name]' - show birthday for name 'name'
+'show-birthday [name]' - show birthday for name 'name'
 'birthdays' - show all birthdays from the phone book on the next week
+'birthdays-in-days [days]' - show all birthdays in a particular amount of days
 'search-by-name [name]' - shows all contacts with this name
 'search-by-birthday [date]' - shows all contacts with the specific birthday
 'search-by-emails [email]' - shows all contacts with the specific email
