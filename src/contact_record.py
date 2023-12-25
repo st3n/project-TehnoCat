@@ -129,7 +129,7 @@ class Record:
             fields = [fields]
 
         no_nones = [item for item in fields if item is not None]
-        field_values = list(map(lambda field: field.value, no_nones))
+        field_values = list(map(lambda field: str(field).lower(), no_nones))
 
         result = False
         for word in field_values:
@@ -142,13 +142,13 @@ class Record:
         return result
 
     def add_phone(self, phone):
-        if Phone.is_valid(phone):
-            self.phones.append(Phone(phone))
-        else:
-            raise PhoneValueError
+        self.phones.append(Phone(phone))
 
     def remove_phone(self, phone):
-        self.phones.remove(Phone(phone))
+        try:
+            self.phones.remove(Phone(phone))
+        except ValueError:
+            raise PhoneValueNotExist
 
     def edit_phone(self, old_phone, new_phone):
         if Phone.is_valid(new_phone):
@@ -183,7 +183,10 @@ class Record:
             raise EmailValueError
 
     def remove_email(self, email):
-        self.emails.remove(Email(email))
+        try:
+            self.emails.remove(Email(email))
+        except ValueError:
+            raise EmailValueNotExist
 
     def add_address(self, address):
         self.address.append(Address(address))
@@ -196,7 +199,10 @@ class Record:
             raise AddressValueNotExist(self.name, old_address)
 
     def remove_address(self, address):
-        self.address.remove(Address(address))
+        try:
+            self.address.remove(Address(address))
+        except ValueError:
+            raise AddressValueNotExist
 
     def add_note(self):
         self.notes.value = edit_note_with_vim(self.notes.value)
