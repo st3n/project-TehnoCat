@@ -27,13 +27,16 @@ def main():
 
         console_history.add_history(user_input)
         args = cmd_parser.parse_input(user_input)
-        if type(args) is list:
-            func_name, args = args
-            func = getattr(contacts, func_name)
-            func(args)
-        elif type(args) is str:
-            func = getattr(contacts, args)
-            func()
+        try:
+            if type(args) is list:
+                func_name, args = args
+                func = getattr(contacts, func_name)
+                func(args)
+            elif type(args) is str:
+                func = getattr(contacts, args)
+                func()
+        except AttributeError as e:
+            print(e.message)
 
 
 if __name__ == "__main__":

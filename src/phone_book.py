@@ -221,7 +221,7 @@ class PhoneBook(UserDict):
         if name not in self.data:
             raise RecordDoesNotExistError
 
-        self.data[args["name"]].add_birthday(args["birthday"])
+        self.data[name].add_birthday(args["birthday"])
         print("[bold purple]Birthday added[/bold purple].\n")
 
     @dump_contacts
@@ -360,7 +360,7 @@ class PhoneBook(UserDict):
     @dump_contacts
     @input_error
     def add_note(self, args):
-        [name] = args
+        name = args["name"]
         contact = self.find(name)
         if not contact:
             record = Record(name)

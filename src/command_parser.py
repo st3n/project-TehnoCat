@@ -17,6 +17,7 @@ class CommandParser:
         self.add_email_pattern = re.compile("^add-email (.+?) ([^ \t\n\r\f\v]+)$")
         self.add_birthday_pattern = re.compile("^add-birthday (.+?) ([^ \t\n\r\f\v]+)$")
         self.add_address_pattern = re.compile('^add-address (.+?) "(.+?)"$')
+        self.add_notes_pattern = re.compile("^add-note (.+?)$")
 
     @input_error
     def parse_input(self, user_input: str):
@@ -44,6 +45,8 @@ class CommandParser:
             return self.parse_add_address_cmd(user_input)
         elif cmd == "add-birthday":
             return self.parse_add_birthday_cmd(user_input)
+        elif cmd == "add-note":
+            return self.parse_add_notes_cmd(user_input)
         else:
             cmd_info = find_command_by_name(cmd)
             if cmd_info["args"]:
@@ -211,3 +214,14 @@ class CommandParser:
                 return ["add_birthday", {"name": name, "birthday": birthday}]
         else:
             raise ValueError
+
+    def parse_add_notes_cmd(self, user_input):
+        add_notes_match = self.add_notes_pattern.match(user_input)
+        if add_notes_match:
+            name = add_notes_match.group(1).strip() if add_notes_match.group(1) else ""
+            if not name:
+                raise ValueError  # name is obligatory
+            return ["add_note", {"name": name}]
+        else:
+            raise ValueError
+
