@@ -1,9 +1,9 @@
 import datetime
 import re
 
-from src.utils.cli_parse_decorator import *
-from src.utils.validator import is_valid_phone, is_valid_email
-from src.utils.vim import edit_note_with_vim
+from project_tehnocat.utils.cli_parse_decorator import *
+from project_tehnocat.utils.validator import is_valid_phone, is_valid_email
+from project_tehnocat.utils.vim import edit_note_with_vim
 
 
 class Field:
@@ -33,7 +33,7 @@ class Name(Field):
 class Birthday(Field):
     def __init__(self, birthday):
         try:
-            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y"))
+            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y").strftime("%d.%m.%Y"))
         except ValueError:
             raise BirthdayValueError
 
@@ -99,6 +99,21 @@ class Record:
             f"tags: {[tag.value for tag in self.notes_tags]}"
         )
 
+    def __repr__(self):
+        return "Record(%s,)" % (self.name,)
+
+    def __eq__(self, other):
+        if isinstance(other, Record):
+            return self.name == other.name
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(self.__repr__())
+
     # Checks if the record field includes a value
     # Compitable with arrays and literal constants
     #
@@ -116,7 +131,15 @@ class Record:
         no_nones = [item for item in fields if item is not None]
         field_values = list(map(lambda field: str(field).lower(), no_nones))
 
-        return any(value.lower() in word for word in field_values)
+        result = False
+        for word in field_values:
+            if isinstance(word, datetime.datetime):
+                word = word.strftime("%d.%m.%Y")
+            if value.lower() in word.lower():
+                result = True
+                break
+
+        return result
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))

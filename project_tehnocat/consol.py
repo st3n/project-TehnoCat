@@ -1,7 +1,9 @@
 import rich.style
 from rich.console import Console
 from rich.table import Table
-from src.command import bot_commands
+from rich.text import Text
+
+from project_tehnocat.command import bot_commands
 
 
 class ConsolePrinter:
@@ -9,7 +11,26 @@ class ConsolePrinter:
         self.contacts = contacts
         self.console = Console()
 
-    def display_table(self, records):
+    @staticmethod
+    def highlight_substrings(text, substrings, style="bold white on red"):
+        """Highlights substrings within a text with the given style."""
+        lowered_text = text.lower()
+        highlighted_text = Text()
+        i = 0
+        while i < len(text):
+            matched = False
+            for substring in substrings:
+                if lowered_text.startswith(substring, i):
+                    highlighted_text.append(text[i:i + len(substring)], style=style)
+                    i += len(substring)
+                    matched = True
+                    break
+            if not matched:
+                highlighted_text.append(text[i])
+                i += 1
+        return highlighted_text
+
+    def display_table(self, records, highlight=None):
         table = Table(show_header=True, header_style="bold magenta", show_lines=True)
         table.add_column("Name", style="cyan", width=20)
         table.add_column("Phones", style="yellow", width=40)
@@ -36,7 +57,7 @@ class ConsolePrinter:
                 else "None"
             )
             birthday_str = (
-                str(record.birthday)
+                record.birthday.value.strftime("%d.%m.%Y")
                 if hasattr(record, "birthday") and record.birthday
                 else "None"
             )
@@ -46,6 +67,26 @@ class ConsolePrinter:
                 if record.notes_tags
                 else "None"
             )
+
+            if highlight:
+                [field_name] = highlight.keys()
+                [search_values] = highlight.values()
+
+                if field_name == "name":
+                    name = self.highlight_substrings(name, search_values)
+                elif field_name == "phones":
+                    phones_str = self.highlight_substrings(phones_str, search_values)
+                elif field_name == "emails":
+                    emails_str = self.highlight_substrings(emails_str, search_values)
+                elif field_name == "addresses":
+                    addresses_str = self.highlight_substrings(addresses_str, search_values)
+                elif field_name == "birthday":
+                    birthday_str = self.highlight_substrings(birthday_str, search_values)
+                elif field_name == "notes":
+                    notes_str = self.highlight_substrings(notes_str, search_values)
+                elif field_name == "notes_tags":
+                    tags_str = self.highlight_substrings(tags_str, search_values)
+
             table.add_row(
                 name,
                 phones_str,

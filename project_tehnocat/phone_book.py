@@ -5,14 +5,14 @@ from rich import print
 import datetime
 import re
 
-from src.utils.validator import is_valid_phone
-from src.utils.cli_parse_decorator import *
-from src.utils.demo_data import generate_fake_contacts_data
-from src.utils.dump_decorator import dump_contacts
-from src.phone_book import *
-from src.birthdays import *
-from src.contact_record import Record
-from src.consol import ConsolePrinter
+from project_tehnocat.utils.validator import is_valid_phone
+from project_tehnocat.utils.cli_parse_decorator import *
+from project_tehnocat.utils.demo_data import generate_fake_contacts_data
+from project_tehnocat.utils.dump_decorator import dump_contacts
+from project_tehnocat.phone_book import *
+from project_tehnocat.birthdays import *
+from project_tehnocat.contact_record import Record
+from project_tehnocat.consol import ConsolePrinter
 
 
 class PhoneBook(UserDict):
@@ -25,7 +25,6 @@ class PhoneBook(UserDict):
         """
         super().__init__()
         self.data = {}
-
 
         if load_from_file:
             self.load()
@@ -60,7 +59,7 @@ class PhoneBook(UserDict):
         :return:
         """
         FILENAME = "./data/address_book.bin"
-        if os.path.exists(FILENAME):
+        if os.path.exists(FILENAME) and os.path.getsize(FILENAME) > 0:
             with open(FILENAME, "rb") as file:
                 self.data = pickle.load(file)
 
@@ -329,21 +328,59 @@ class PhoneBook(UserDict):
         )
         self.console.display_birthdays_in_days(data)
 
-    def search(self, value, field_name):
-        search_result = []
+    def search(self, values, field_name):
+        values = [v.replace(" ", "") for v in values]
+        if not isinstance(values, datetime):
+            values = [v.lower() for v in values]
+        # else:
+        #     values = [values]
+        match_scores, matched_substrings = {}, {}
 
-        for v in value:
-            search_result += self.search_by(field_name, v)
+        for v in values:
+            for record, substring in self.search_by_partial(field_name, v):
+                self.update_match_info(match_scores, matched_substrings, record, substring)
 
-        print(f"{len(search_result)} records found:")
-        res = [(rec.name.value, rec) for rec in search_result]
-        self.console.display_table(res)
+        sorted_matches = sorted(match_scores, key=match_scores.get, reverse=True)
+        res = [(rec.name.value, rec) for rec in sorted_matches]
 
-    def search_by(self, field_name, value):
-        records = list(self.data.values())
-        return list(
-            filter(lambda record: record.field_has_value(field_name, value), records)
-        )
+        print(f"{len(sorted_matches)} records found:")
+        highlight_substrings = {field_name: [matched_substrings[rec] for rec in sorted_matches]}
+        self.console.display_table(res, highlight=highlight_substrings)
+
+    def update_match_info(self, match_scores, matched_substrings, record, substring):
+        match_score = len(substring)
+        if match_score > match_scores.get(record, 0):
+            match_scores[record] = match_score
+            matched_substrings[record] = substring
+
+    def search_by_partial(self, field_name, value, min_substring_length=3):
+        partial_matches = {}
+
+        for record in self.data.values():
+            substring = self.find_longest_match(record, field_name, value, min_substring_length)
+            if substring:
+                partial_matches[record] = substring
+
+        return partial_matches.items()
+
+    def find_longest_match(self, record, field_name, value, min_substring_length):
+        if len(value) < min_substring_length:
+            # If the value is shorter than the minimum substring length, check the value directly
+            if record.field_has_value(field_name, value):
+                return value
+            else:
+                return None
+
+        # For longer values, generate and check all substrings
+        longest_match = None
+        for i in range(len(value)):
+            for j in range(len(value), i + min_substring_length - 1, -1):
+                substring = value[i:j]
+                if record.field_has_value(field_name, substring) and (
+                        longest_match is None or len(substring) > len(longest_match)):
+                    longest_match = substring
+
+        return longest_match
 
     def search_by_name(self, args):
         return self.search([' '.join(args['value'])], "name")
