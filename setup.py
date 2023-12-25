@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="src",
+    name="project_tehnocat",
     version="1.0.0",
     description="Personal assistant CLI tool. Manage your contacts and notes.",
     url="https://github.com/st3n/project-TehnoCat",
