@@ -59,7 +59,7 @@ class PhoneBook(UserDict):
         :return:
         """
         FILENAME = "./data/address_book.bin"
-        if os.path.exists(FILENAME):
+        if os.path.exists(FILENAME) and os.path.getsize(FILENAME) > 0:
             with open(FILENAME, "rb") as file:
                 self.data = pickle.load(file)
 

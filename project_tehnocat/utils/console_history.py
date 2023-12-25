@@ -15,6 +15,10 @@ class HistoryConsole(code.InteractiveConsole):
         self.histfile = os.path.expanduser(
             os.path.join(current_dir, ".command_history")
         )
+        if not os.path.exists(self.histfile):
+            with open(file_path, 'w') as file:
+                file.write('')
+
         code.InteractiveConsole.__init__(self, locals, filename)
         self.init_history(self.histfile)
 
