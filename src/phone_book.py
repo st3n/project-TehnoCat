@@ -299,7 +299,7 @@ class PhoneBook(UserDict):
         contacts_with_birthdays = list(
             filter(lambda name: self.find(name).birthday is not None, self.data)
         )
-        birthdays_per_week = birthdays_per_week(
+        birthdays = get_birthdays_per_week(
             map(
                 lambda name: {
                     "name": name,
@@ -309,7 +309,7 @@ class PhoneBook(UserDict):
             )
         )
 
-        self.console.display_birthdays_next_week(birthdays_per_week)
+        self.console.display_birthdays_next_week(birthdays)
 
     @input_error
     def show_birthdays_in_days(self, args):
