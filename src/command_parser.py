@@ -52,7 +52,7 @@ class CommandParser:
         else:
             cmd_info = find_command_by_name(cmd)
             if cmd_info["args"]:
-                return cmd_info["func"], *args
+                return [cmd_info["func"], args]
             else:
                 return cmd_info["func"]
 
