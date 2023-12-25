@@ -26,6 +26,7 @@ class PhoneBook(UserDict):
         super().__init__()
         self.data = {}
 
+
         if load_from_file:
             self.load()
 
@@ -65,92 +66,106 @@ class PhoneBook(UserDict):
 
     def import_demo(self):
         for contact_info in generate_fake_contacts_data(10):
-            self.add_contact([contact_info["name"], contact_info["phone"]])
-            self.add_birthday([contact_info["name"], contact_info["birthday"]])
-            self.add_email([contact_info["name"], contact_info["email"]])
-            self.add_address([contact_info["name"], contact_info["address"]])
+            self.add_contact({"name" : contact_info["name"], "phone" : contact_info["phone"]})
+            self.add_birthday({"name" :contact_info["name"], "birthday": contact_info["birthday"]})
+            self.add_email({"name" : contact_info["name"], "email": contact_info["email"]})
+            self.add_address({"name" :contact_info["name"], "address" : contact_info["address"]})
 
         return "Demo data has been imported successfully"
+
+    def get_contact(self, args, args_expected_size: int):
+        if len(args) < args_expected_size:
+            raise ValueError
+
+        contact = self.find(args[0])
+        if not contact:
+            raise RecordDoesNotExistError
+
+        return contact
 
     @dump_contacts
     @input_error
     def add_contact(self, args):
-        name, phone = args
-
+        name = args["name"]
         if name in self.data:
-            self.data[name].add_phone(phone)
-        else:
-            record = Record(name)
-            record.add_phone(phone)
-            self.add_record(record)
+            raise RecordAlreadyExistsError
 
-        return f"[bold purple]Phone number[/bold purple] {phone} [bold purple]for contact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n"
+        record = Record(name)
+        self.add_record(record)
+        if args["phone"]:
+            self.add_phone(args)
+        if args["email"]:
+            self.add_email(args)
+        if args["address"]:
+            self.add_address(args)
 
-    @dump_contacts
-    @input_error
-    def remove_contact(self, args):
-        if len(args) < 1:
-            raise ValueError
-
-        name = args[0]
-
-        if len(args) == 1:
-            self.delete(name)
-            print(
-                f"[magenta]Contact[/magenta] [bold cyan]{name}[/bold cyan] [magenta]removed[/magenta].\n"
-            )
-            return
-
-        if len(args) == 2:
-            if "@" in args[1]:
-                self.data[name].remove_email(args[1])
-                print(
-                    f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args[1]}' [magenta]removed[/magenta].\n"
-                )
-            elif args[1].isdigit():
-                self.data[name].remove_phone(args[1])
-                print(
-                    f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args[1]}' [magenta]removed[/magenta].\n"
-                )
-        else:
-            full_address = " ".join(args[1:])
-            self.data[name].remove_address(full_address)
-            print(
-                f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{full_address}' [magenta]removed[/magenta].\n"
-            )
+        return f"[bold purple]Ccontact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n"
 
     @dump_contacts
     @input_error
-    def change_contact(self, args):
-        name = args[0]
+    def remove_contact(self, name):
+        self.delete(name)
+        print(f"[magenta]Contact[/magenta] [bold cyan]{name}[/bold cyan] [magenta]removed[/magenta].\n")
 
+    @dump_contacts
+    @input_error
+    def remove_phone(self, args):
+        name = args["name"]
         if name not in self.data:
-            raise RecordDoesNotExistError(name)
+            raise RecordDoesNotExistError
 
-        if len(args) == 3:
-            if "@" in args[1] and "@" in args[2]:
-                self.data[name].edit_email(args[1], args[2])
-                print(
-                    f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args[1]}' changed to '{args[2]}'.\n"
-                )
-                return
-            elif args[1].isdigit() and args[2].isdigit():
-                self.data[name].edit_phone(args[1], args[2])
-                print(
-                    f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args[1]}'[bold purple] changed to[/bold purple] '{args[2]}'.\n"
-                )
-                return
+        self.data[name].remove_phone(args["phone"])
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args["phone"]}' [magenta]removed[/magenta].\n")
 
-        addresses = [
-            x.strip() for x in " ".join(args[1:]).split(sep="|") if x != "" and x != " "
-        ]
-        if len(addresses) != 2:
-            raise ValueError
+    @dump_contacts
+    @input_error
+    def remove_email(self, args):
+        name = args["name"]
+        if name not in self.data:
+            raise RecordDoesNotExistError
 
-        self.data[name].edit_address(addresses[0], addresses[1])
-        res = f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{addresses[0]}' [bold purple]changed to [/bold purple]'{addresses[1]}'.\n"
-        print(res)
-        return res
+        self.data[name].remove_email(args["email"])
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args["email"]}' [magenta]removed[/magenta].\n")
+
+    @dump_contacts
+    @input_error
+    def remove_address(self, args):
+        name = args["name"]
+        if name not in self.data:
+            raise RecordDoesNotExistError
+
+        self.data[name].remove_address(args["address"])
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{args["address"]}' [magenta]removed[/magenta].\n")
+
+    @dump_contacts
+    @input_error
+    def change_phone(self, args):
+        name = args["name"]
+        if name not in self.data:
+            raise RecordDoesNotExistError
+
+        self.data[name].edit_phone(args["old_value"], args["new_value"])
+        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args["old_value"]}'[bold purple] changed to[/bold purple] '{args["new_value"]}'.\n")
+
+    @dump_contacts
+    @input_error
+    def change_email(self, args):
+        name = args["name"]
+        if name not in self.data:
+            raise RecordDoesNotExistError
+
+        self.data[name].edit_email(args["old_value"], args["new_value"])
+        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args["old_value"]}' changed to '{args["new_value"]}'.\n")
+
+    @dump_contacts
+    @input_error
+    def change_address(self, args):
+        name = args["name"]
+        if name not in self.data:
+            raise RecordDoesNotExistError
+
+        self.data[name].edit_address(args["old_value"], args["new_value"])
+        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{args["old_value"]}' [bold purple]changed to [/bold purple]'{args["new_value"]}'.\n")
 
     @input_error
     def show_contact(self, args):
@@ -165,9 +180,19 @@ class PhoneBook(UserDict):
         print(str(contact))
 
     @input_error
+    def add_phone(self, args):
+        name = args["name"]
+        if name not in self.data:
+            raise RecordDoesNotExistError
+
+        self.data[name].add_phone(args["phone"])
+        print("[bold purple]Phone added[/bold purple].\n")
+
+    @input_error
     def show_phone(self, args):
-        if len(args) == 0:
+        if len(args) < 1:
             raise ValueError
+
         name = args[0]
         contact = self.find(name)
         if not contact:
@@ -192,38 +217,33 @@ class PhoneBook(UserDict):
     @dump_contacts
     @input_error
     def add_birthday(self, args):
-        name, date = args
-        contact = self.find(name)
-        if not contact:
+        name = args["name"]
+        if name not in self.data:
             raise RecordDoesNotExistError
 
-        contact.add_birthday(date)
+        self.data[args["name"]].add_birthday(args["birthday"])
         print("[bold purple]Birthday added[/bold purple].\n")
 
     @dump_contacts
     @input_error
     def add_email(self, args):
-        name, *emails = args
-        contact = self.find(name)
-        if not contact:
+        name = args["name"]
+        if name not in self.data:
             raise RecordDoesNotExistError
 
-        for email in emails:
-            contact.add_email(email)
-        print("[bold purple]Emails added[/bold purple].\n")
+        self.data[name].add_email(args["email"])
+        print("[bold purple]Email added[/bold purple].\n")
 
     @dump_contacts
     @input_error
     def add_address(self, args):
-        name = args[0]
-        contact = self.find(name)
-        if not contact:
+        name = args["name"]
+        if name not in self.data:
             raise RecordDoesNotExistError
 
-        address = " ".join(args[1:])
-        contact.add_address(address)
+        self.data[name].add_address(args["address"])
         print(
-            f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{address}' [magenta]added[/magenta].\n"
+            f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{args["address"]}' [magenta]added[/magenta].\n"
         )
 
     @input_error
