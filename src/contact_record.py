@@ -114,9 +114,9 @@ class Record:
             fields = [fields]
 
         no_nones = [item for item in fields if item is not None]
-        field_values = list(map(lambda field: field.value, no_nones))
+        field_values = list(map(lambda field: str(field).lower(), no_nones))
 
-        return any(value.lower() in word.lower() for word in field_values)
+        return any(value.lower() in word for word in field_values)
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))

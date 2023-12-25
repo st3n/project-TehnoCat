@@ -330,7 +330,6 @@ class PhoneBook(UserDict):
         self.console.display_birthdays_in_days(data)
 
     def search(self, value, field_name):
-        value = re.split(r"\n|\s", value) if type(value) is str else [value]
         search_result = []
 
         for v in value:
@@ -347,20 +346,16 @@ class PhoneBook(UserDict):
         )
 
     def search_by_name(self, args):
-        value = args[0]
-        return self.search(value, "name")
+        return self.search([' '.join(args)], "name")
 
     def search_by_birthday(self, args):
-        value = datetime.datetime.strptime(args[0], "%d.%m.%Y")
-        return self.search(value, "birthday")
+        return self.search(args, "birthday")
 
     def search_by_emails(self, args):
-        value = args[0]
-        return self.search(value, "emails")
+        return self.search(args, "emails")
 
     def search_by_phones(self, args):
-        value = args[0]
-        return self.search(value, "phones")
+        return self.search(args, "phones")
 
     @dump_contacts
     @input_error
