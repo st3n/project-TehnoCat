@@ -98,7 +98,7 @@ class Record:
             f"notes: {self.notes.value}"
             f"tags: {[tag.value for tag in self.notes_tags]}"
         )
-    
+
     # Checks if the record field includes a value
     # Compitable with arrays and literal constants
     #
