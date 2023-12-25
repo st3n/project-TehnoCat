@@ -72,7 +72,6 @@ class ConsolePrinter:
                 [field_name] = highlight.keys()
                 [search_values] = highlight.values()
 
-                print(field_name)
                 if field_name == "name":
                     name = self.highlight_substrings(name, search_values)
                 elif field_name == "phones":
