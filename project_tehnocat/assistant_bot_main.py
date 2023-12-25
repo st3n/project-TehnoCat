@@ -38,6 +38,5 @@ def main():
         except AttributeError as e:
             print(e.message)
 
-
 if __name__ == "__main__":
     main()

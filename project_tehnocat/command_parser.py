@@ -56,6 +56,7 @@ class CommandParser:
             else:
                 return cmd_info["func"]
 
+
     def parse_add_cmd(self, user_input):
         add_match = self.add_pattern.match(user_input)
         if add_match:
@@ -157,6 +158,7 @@ class CommandParser:
 
         raise ValueError
 
+
     def parse_add_phone_cmd(self, user_input):
         add_phone_match = self.add_phone_pattern.match(user_input)
         if add_phone_match:
@@ -234,3 +236,4 @@ class CommandParser:
             return [method, {"value": value}]
         else:
             raise ValueError
+
