@@ -148,7 +148,7 @@ class Record:
         try:
             self.phones.remove(Phone(phone))
         except ValueError:
-            raise PhoneValueNotExist
+            raise PhoneValueNotExist(self.name, phone)
 
     def edit_phone(self, old_phone, new_phone):
         if Phone.is_valid(new_phone):
@@ -180,13 +180,13 @@ class Record:
             else:
                 raise EmailValueNotExist(self.name, old_email)
         else:
-            raise EmailValueError
+            raise EmailValueError(new_email)
 
     def remove_email(self, email):
         try:
             self.emails.remove(Email(email))
         except ValueError:
-            raise EmailValueNotExist
+            raise EmailValueNotExist(self.name, email)
 
     def add_address(self, address):
         self.address.append(Address(address))
@@ -202,7 +202,7 @@ class Record:
         try:
             self.address.remove(Address(address))
         except ValueError:
-            raise AddressValueNotExist
+            raise AddressValueNotExist(self.name, address)
 
     def add_note(self):
         self.notes.value = edit_note_with_vim(self.notes.value)
