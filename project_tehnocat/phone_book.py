@@ -102,9 +102,9 @@ class PhoneBook(UserDict):
 
     @dump_contacts
     @input_error
-    def remove_contact(self, name):
-        self.delete(name)
-        print(f"[magenta]Contact[/magenta] [bold cyan]{name}[/bold cyan] [magenta]removed[/magenta].\n")
+    def remove_contact(self, args):
+        self.delete(args['name'])
+        print(f"[magenta]Contact[/magenta] [bold cyan]{args['name']}[/bold cyan] [magenta]removed[/magenta].\n")
 
     @dump_contacts
     @input_error
