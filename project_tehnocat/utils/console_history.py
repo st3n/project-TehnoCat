@@ -16,7 +16,7 @@ class HistoryConsole(code.InteractiveConsole):
             os.path.join(current_dir, ".command_history")
         )
         if not os.path.exists(self.histfile):
-            with open(file_path, 'w') as file:
+            with open(self.histfile, 'w') as file:
                 file.write('')
 
         code.InteractiveConsole.__init__(self, locals, filename)
