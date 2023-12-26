@@ -57,7 +57,7 @@ class ConsolePrinter:
                 else "None"
             )
             birthday_str = (
-                record.birthday.value
+                str(record.birthday)
                 if hasattr(record, "birthday") and record.birthday
                 else "None"
             )
