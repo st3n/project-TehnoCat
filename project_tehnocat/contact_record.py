@@ -33,7 +33,7 @@ class Name(Field):
 class Birthday(Field):
     def __init__(self, birthday):
         try:
-            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y").strftime("%d.%m.%Y"))
+            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y"))
         except ValueError:
             raise BirthdayValueError
 
@@ -91,7 +91,7 @@ class Record:
     def __str__(self):
         return (
             f"Contact name: {self.name.value}\n"
-            f"birthday: {self.birthday if self.birthday else ''}\n"
+            f"birthday: {str(self.birthday) if self.birthday else ''}\n"
             f"phones: {', '.join(p.value for p in self.phones)}\n"
             f"emails: {', '.join(e.value for e in self.emails)}\n"
             f"address: {', '.join(a.value for a in self.address)}\n"
@@ -148,7 +148,7 @@ class Record:
         try:
             self.phones.remove(Phone(phone))
         except ValueError:
-            raise PhoneValueNotExist
+            raise PhoneValueNotExist(self.name, phone)
 
     def edit_phone(self, old_phone, new_phone):
         if Phone.is_valid(new_phone):
@@ -180,13 +180,13 @@ class Record:
             else:
                 raise EmailValueNotExist(self.name, old_email)
         else:
-            raise EmailValueError
+            raise EmailValueError(new_email)
 
     def remove_email(self, email):
         try:
             self.emails.remove(Email(email))
         except ValueError:
-            raise EmailValueNotExist
+            raise EmailValueNotExist(self.name, email)
 
     def add_address(self, address):
         self.address.append(Address(address))
@@ -202,7 +202,7 @@ class Record:
         try:
             self.address.remove(Address(address))
         except ValueError:
-            raise AddressValueNotExist
+            raise AddressValueNotExist(self.name, address)
 
     def add_note(self):
         self.notes.value = edit_note_with_vim(self.notes.value)
