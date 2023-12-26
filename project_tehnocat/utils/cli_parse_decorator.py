@@ -2,6 +2,20 @@ from rich import print
 
 error_msg = "[bold yellow]Invalid command format.[/bold yellow] \U0001F914"
 
+class NoNameProvided(Exception):
+    def __init__(self, msg):
+        self.message = msg
+
+
+class InvalidArgPropertyCmd(Exception):
+    def __init__(self, msg):
+        self.message = msg
+
+
+class InvalidArgument(Exception):
+    def __init__(self, cmd):
+        self.message = f"cmd: {cmd}\n{error_msg} Try help."
+
 
 class BirthdayValueError(Exception):
     message = "\U0001F914[bold green]Data format is not correct for birthday. Expected format is DD.MM.YYYY.[/bold green]\n"
@@ -87,6 +101,9 @@ def input_error(func):
             PhoneValueError,
             PhoneValueNotExist,
             BirthdayValueError,
+            NoNameProvided,
+            InvalidArgument,
+            InvalidArgPropertyCmd
         ) as e:
             print(e.message)
             return
