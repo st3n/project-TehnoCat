@@ -36,7 +36,7 @@ def main():
                 func = getattr(contacts, args)
                 func()
         except AttributeError as e:
-            print(e.message)
+            print(str(e))
 
 
 if __name__ == "__main__":
