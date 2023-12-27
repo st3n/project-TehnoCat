@@ -83,28 +83,34 @@ class PhoneBook(UserDict):
         return contact
 
     @dump_contacts
-    @input_error
     def add_contact(self, args):
-        name = args["name"]
+        if args.get("name") != None:
+            name = args["name"]
+        else:
+            print("No name provide. Try help")
+
         if name in self.data:
-            raise RecordAlreadyExistsError
+            print ("Record alreasy exist")
 
         record = Record(name)
         self.add_record(record)
-        if args["phone"]:
+        phone = args.get("phone")
+        email = args.get("email")
+        address = args.get("address")
+        if phone not in  ["", None]:
             self.add_phone(args)
-        if args["email"]:
+        if email not in  ["", None]:
             self.add_email(args)
-        if args["address"]:
+        if address not in  ["", None]:
             self.add_address(args)
 
-        return f"[bold purple]Ccontact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].\n"
+        print(f"[bold purple]Contact[/bold purple] [bold cyan]{name}[/bold cyan] [bold purple]added[/bold purple].")
 
     @dump_contacts
     @input_error
     def remove_contact(self, args):
         self.delete(args['name'])
-        print(f"[magenta]Contact[/magenta] [bold cyan]{args['name']}[/bold cyan] [magenta]removed[/magenta].\n")
+        print(f"[magenta]Contact[/magenta] [bold cyan]{args['name']}[/bold cyan] [magenta]removed[/magenta].")
 
     @dump_contacts
     @input_error
@@ -114,7 +120,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].remove_phone(args["phone"])
-        print(f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args['phone']}' [magenta]removed[/magenta].\n")
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]phone[/magenta] '{args['phone']}' [magenta]removed[/magenta].")
 
     @dump_contacts
     @input_error
@@ -124,7 +130,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].remove_email(args["email"])
-        print(f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args['email']}' [magenta]removed[/magenta].\n")
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]email[/magenta]'{args['email']}' [magenta]removed[/magenta].")
 
     @dump_contacts
     @input_error
@@ -134,7 +140,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].remove_address(args["address"])
-        print(f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{args['address']}' [magenta]removed[/magenta].\n")
+        print(f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{args['address']}' [magenta]removed[/magenta].")
 
     @dump_contacts
     @input_error
@@ -144,7 +150,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].edit_phone(args["old_value"], args["new_value"])
-        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args['old_value']}'[bold purple] changed to[/bold purple] '{args['new_value']}'.\n")
+        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]phone [/bold purple]'{args['old_value']}'[bold purple] changed to[/bold purple] '{args['new_value']}'.")
 
     @dump_contacts
     @input_error
@@ -154,7 +160,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].edit_email(args["old_value"], args["new_value"])
-        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args['old_value']}' changed to '{args['new_value']}'.\n")
+        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]email '{args['old_value']}' changed to '{args['new_value']}'.")
 
     @dump_contacts
     @input_error
@@ -164,7 +170,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].edit_address(args["old_value"], args["new_value"])
-        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{args['old_value']}' [bold purple]changed to [/bold purple]'{args['new_value']}'.\n")
+        print(f"[bold cyan]{name}'s[/bold cyan] [bold purple]address[/bold purple] '{args['old_value']}' [bold purple]changed to [/bold purple]'{args['new_value']}'.")
 
     @input_error
     def show_contact(self, args):
@@ -185,7 +191,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].add_phone(args["phone"])
-        print("[bold purple]Phone added[/bold purple].\n")
+        print("[bold purple]Phone added[/bold purple].")
 
     @input_error
     def show_phone(self, args):
@@ -221,7 +227,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].add_birthday(args["birthday"])
-        print("[bold purple]Birthday added[/bold purple].\n")
+        print("[bold purple]Birthday added[/bold purple].")
 
     @dump_contacts
     @input_error
@@ -231,7 +237,7 @@ class PhoneBook(UserDict):
             raise RecordDoesNotExistError
 
         self.data[name].add_email(args["email"])
-        print("[bold purple]Email added[/bold purple].\n")
+        print("[bold purple]Email added[/bold purple].")
 
     @dump_contacts
     @input_error
@@ -242,7 +248,7 @@ class PhoneBook(UserDict):
 
         self.data[name].add_address(args["address"])
         print(
-            f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{args['address']}' [magenta]added[/magenta].\n"
+            f"[bold cyan]{name}'s [/bold cyan][magenta]address[/magenta] '{args['address']}' [magenta]added[/magenta]."
         )
 
     @input_error
@@ -312,6 +318,9 @@ class PhoneBook(UserDict):
 
     @input_error
     def show_birthdays_in_days(self, args):
+        if len(args) != 1:
+            raise ValueError
+
         days_from_now = args[0]
         contacts_with_birthdays = list(
             filter(lambda name: self.find(name).birthday is not None, self.data)

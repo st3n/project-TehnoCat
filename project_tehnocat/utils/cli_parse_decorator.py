@@ -89,6 +89,7 @@ def input_error(func):
                     "search_by_note": f"{error_msg}\n[bold green]Use 'search_by_note [search string]' and note editor will open[/bold green]\n",
                     "search_by_tag": f"{error_msg}\n[bold green]Use 'search_by_tag [search string]' and note editor will open.[/bold green]\n",
                     "show_all": "[bold yellow]The contacts list is empty.[/bold yellow]\n",
+                    "show_birthdays_in_days": "[bold yellow]No argument provided. Try help[/bold yellow]\n",
                 }[func.__name__]
             )
             return

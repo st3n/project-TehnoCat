@@ -33,7 +33,8 @@ class Name(Field):
 class Birthday(Field):
     def __init__(self, birthday):
         try:
-            super().__init__(datetime.datetime.strptime(birthday, "%d.%m.%Y"))
+            val = datetime.datetime.strptime(birthday, "%d.%m.%Y")
+            super().__init__(val)
         except ValueError:
             raise BirthdayValueError
 
